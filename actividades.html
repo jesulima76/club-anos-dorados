@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Actividades | Club de Los Años Dorados</title>
+  <meta name="description" content="Catálogo de las 76 actividades recreativas, espirituales y de desarrollo personal del Club de Los Años Dorados.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Open Sans', system-ui, sans-serif;
+      color: #2b2b2b;
+      background: #fdfaf4;
+      line-height: 1.6;
+    }
+    :root {
+      --primary: #c85a17;
+      --primary-dark: #a14410;
+      --cream: #fdfaf4;
+      --ink: #2b2b2b;
+      --muted: #6a6a6a;
+      --card-bg: #ffffff;
+      --border: #eadfcd;
+      --shadow: 0 6px 24px rgba(0,0,0,.08);
+      --radius: 14px;
+    }
+    h1,h2,h3,h4 { font-family: 'Merriweather', serif; line-height: 1.25; margin: 0 0 .5em; }
+    p { margin: 0 0 1em; }
+    img { max-width: 100%; display: block; }
+    .container { width: min(1180px, 92%); margin-inline: auto; }
+
+    .btn {
+      display: inline-block;
+      padding: .75rem 1.4rem;
+      border-radius: 999px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform .15s ease, background .2s ease, color .2s ease;
+      font-size: .95rem;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline { border-color: var(--primary); color: var(--primary); background: transparent; }
+    .btn-outline:hover { background: var(--primary); color: #fff; }
+
+    .page-header {
+      background: #fff; border-bottom: 1px solid var(--border);
+      padding: 1rem 0; position: sticky; top: 0; z-index: 50;
+    }
+    .page-header-inner { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .brand { display: flex; align-items: center; gap: .75rem; }
+    .brand-icon { font-size: 2rem; }
+    .brand h1 { font-size: 1.2rem; margin: 0; }
+    .brand p { margin: 0; font-size: .8rem; color: var(--muted); }
+
+    .filters {
+      background: #fff; padding: 1.2rem 0;
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 64px; z-index: 40;
+      box-shadow: 0 2px 6px rgba(0,0,0,.03);
+    }
+    .filters-inner { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+    .chip {
+      border: 1px solid var(--border); background: #fff; color: var(--ink);
+      padding: .5rem 1rem; border-radius: 999px; cursor: pointer; font-size: .9rem;
+      font-weight: 600; transition: all .2s ease;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); }
+    .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .search-box {
+      margin-left: auto; border: 1px solid var(--border); border-radius: 999px;
+      padding: .5rem 1rem; font-size: .9rem; min-width: 220px; outline: none;
+    }
+    .search-box:focus { border-color: var(--primary); }
+
+    .catalog { padding: 2.5rem 0; }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .activity-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      cursor: pointer; transition: transform .2s ease, box-shadow .2s ease;
+      display: flex; flex-direction: column;
+    }
+    .activity-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .activity-thumb {
+      aspect-ratio: 16/10; background: #f5eee2;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+    }
+    .activity-body { padding: 1rem 1.1rem 1.2rem; flex: 1; display: flex; flex-direction: column; }
+    .activity-cat {
+      font-size: .72rem; text-transform: uppercase; font-weight: 700;
+      letter-spacing: .05em; color: var(--primary); margin-bottom: .35rem;
+    }
+    .activity-title { font-family: 'Merriweather', serif; font-size: 1.05rem; margin: 0 0 .5rem; }
+    .activity-num {
+      font-size: .75rem; color: var(--muted); margin-top: auto;
+      background: #f5eee2; align-self: flex-start; padding: .2rem .6rem; border-radius: 999px;
+    }
+    .empty-state {
+      grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: var(--muted);
+    }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,.55);
+      display: none; align-items: flex-start; justify-content: center;
+      padding: 2rem 1rem; z-index: 100; overflow-y: auto;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: var(--radius); width: min(820px, 100%);
+      padding: 2rem; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,.3);
+      animation: slideUp .25s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .modal-close {
+      position: absolute; top: 1rem; right: 1rem;
+      border: none; background: #f5eee2; width: 40px; height: 40px;
+      border-radius: 50%; font-size: 1.3rem; cursor: pointer; color: var(--ink);
+      transition: background .2s;
+    }
+    .modal-close:hover { background: var(--border); }
+    .modal-cat {
+      display: inline-block; font-size: .75rem; text-transform: uppercase; font-weight: 700;
+      color: var(--primary); letter-spacing: .05em; margin-bottom: .5rem;
+    }
+    .modal-title { font-size: 1.6rem; margin-bottom: 1rem; padding-right: 2.5rem; }
+    .modal-section { margin-bottom: 1.2rem; }
+    .modal-section h4 {
+      font-size: .85rem; text-transform: uppercase; letter-spacing: .05em;
+      color: var(--primary-dark); margin-bottom: .35rem;
+    }
+    .modal-section p { margin: 0; color: #3a3a3a; }
+    .modal-pasos { margin: 0; padding-left: 1.4rem; color: #3a3a3a; }
+    .modal-pasos li { margin-bottom: .45rem; padding-left: .3rem; line-height: 1.55; }
+    .modal-pasos li::marker { color: var(--primary); font-weight: 700; }
+    .modal-actions {
+      display: flex; gap: .75rem; flex-wrap: wrap;
+      border-top: 1px solid var(--border); padding-top: 1.2rem; margin-top: 1.2rem;
+    }
+    .modal-actions .btn { font-size: .9rem; }
+
+    @media (max-width: 860px) {
+      .filters { top: 60px; }
+      .search-box { width: 100%; margin-left: 0; }
+    }
+    @media (max-width: 520px) {
+      .page-header-inner { flex-direction: column; align-items: flex-start; }
+      .modal { padding: 1.5rem 1.2rem; }
+      .modal-title { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="container page-header-inner">
+      <div class="brand">
+        <span class="brand-icon">🌻</span>
+        <div>
+          <h1>Catálogo de Actividades</h1>
+          <p>Club de Los Años Dorados · Los Andes I</p>
+        </div>
+      </div>
+      <a href="index.html" class="btn btn-outline">← Volver al inicio</a>
+    </div>
+  </header>
+
+  <section class="filters">
+    <div class="container filters-inner" id="filters">
+      <button class="chip active" data-filter="all">Todas</button>
+      <button class="chip" data-filter="recreativas">🎉 Recreativas</button>
+      <button class="chip" data-filter="memoria">🧠 Memoria</button>
+      <button class="chip" data-filter="espirituales">🕊️ Espirituales</button>
+      <button class="chip" data-filter="desarrollo">🌟 Desarrollo Personal</button>
+      <button class="chip" data-filter="artisticas">🎨 Artísticas</button>
+      <button class="chip" data-filter="movimiento">🧘 Movimiento</button>
+      <input type="search" id="searchInput" class="search-box" placeholder="🔍 Buscar actividad...">
+    </div>
+  </section>
+
+  <main class="catalog">
+    <div class="container">
+      <div class="catalog-grid" id="catalogGrid"></div>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
+      <span class="modal-cat" id="modalCat"></span>
+      <h2 class="modal-title" id="modalTitle"></h2>
+
+      <div class="modal-section" id="secObjetivo">
+        <h4>🎯 Objetivo de la actividad</h4>
+        <p id="modalObjetivo"></p>
+      </div>
+
+      <div class="modal-section">
+        <h4>📖 Descripción general</h4>
+        <p id="modalDetalle"></p>
+      </div>
+
+      <div class="modal-section" id="secPasos">
+        <h4>🪜 Cómo desarrollarla paso a paso</h4>
+        <ol id="modalPasos" class="modal-pasos"></ol>
+      </div>
+
+      <div class="modal-section">
+        <h4>🧰 Materiales</h4>
+        <p id="modalMateriales"></p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btnWord">📄 Descargar en Word</button>
+        <button class="btn btn-outline" id="btnPdf">📕 Descargar en PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  /* =========================================================
+     DATOS
+     ========================================================= */
+  const CATEGORIAS = {
+    recreativas:  { nombre: "Recreativas y Entretenimiento", emoji: "🎉" },
+    memoria:      { nombre: "Memoria y Mente Activa",        emoji: "🧠" },
+    espirituales: { nombre: "Espirituales y Crecimiento Interior", emoji: "🕊️" },
+    desarrollo:   { nombre: "Desarrollo Personal y Autoestima", emoji: "🌟" },
+    artisticas:   { nombre: "Artísticas y Manualidades",     emoji: "🎨" },
+    movimiento:   { nombre: "Movimiento Suave y Bienestar",  emoji: "🧘" }
+  };
+
+  const ACTIVIDADES = [
+    /* ============ 1. RECREATIVAS (1–12) ============ */
+    {
+      id: 1, cat: "recreativas",
+      titulo: "El karaoke de nuestros recuerdos",
+      icono: "🎤",
+      objetivo: "Revivir emociones a través de la música y fortalecer la convivencia grupal mediante el canto y la escucha compartida.",
+      metodo: "Cada participante elige una canción de su juventud. Se reproducen canciones conocidas de los años 50, 60, 70, 80 y 90. Se canta individualmente o en grupo. Nadie está obligado a cantar; también puede participar escuchando.",
+      detalle: "La música tiene un poder especial para despertar recuerdos y emociones. En esta actividad los integrantes eligen canciones que marcaron su juventud y las cantan juntos o de forma individual. El ambiente debe ser relajado y alegre, con el objetivo de que cada persona se sienta libre de participar a su manera. Es importante recordar que no se trata de cantar bien, sino de compartir un momento agradable. La actividad también abre espacio para conversar sobre las épocas, los artistas favoritos y las anécdotas asociadas a cada canción.",
+      pasos: [
+        "Preparar una lista amplia de canciones de distintas décadas (boleros, baladas, música bailable, gaitas, etc.).",
+        "Probar el sonido (parlante y celular) antes de comenzar y tener las letras impresas por si alguien las necesita.",
+        "Explicar al grupo que la actividad es libre: se puede cantar, acompañar con palmas o solo escuchar.",
+        "Invitar a quien desee pasar al frente a cantar; si nadie se anima, el coordinador puede iniciar con una canción conocida.",
+        "Intercalar canciones con breves conversaciones: ¿quién cantaba esta canción?, ¿qué recuerdos trae?",
+        "Cerrar con una canción grupal que todos conozcan para terminar con alegría compartida."
+      ],
+      materiales: "Teléfono celular, parlante, letras impresas opcionales."
+    },
+    {
+      id: 2, cat: "recreativas",
+      titulo: "Adivina la canción",
+      icono: "🎵",
+      objetivo: "Estimular la memoria auditiva y la atención mediante el reconocimiento de canciones conocidas.",
+      metodo: "El recreador reproduce entre 5 y 10 segundos de una canción. Los participantes deben adivinar su nombre, cantante o época. Se pueden formar equipos.",
+      detalle: "Es una variante del conocido juego de adivinanzas, pero usando música. El coordinador prepara previamente una lista con canciones muy conocidas de distintas épocas y reproduce solo unos segundos de cada una. Los participantes deben identificar el nombre, el intérprete o la década a la que pertenece. La actividad activa la memoria, la escucha y la atención, y genera conversaciones espontáneas sobre gustos musicales. Puede hacerse de forma individual o por equipos, siempre evitando que la competencia opaque el disfrute colectivo.",
+      pasos: [
+        "Seleccionar 15 o 20 canciones conocidas de diferentes décadas y géneros.",
+        "Organizar al grupo en uno o dos equipos, o dejarlo individual.",
+        "Reproducir solo 5 a 10 segundos de cada canción y dar unos instantes para responder.",
+        "Anotar los aciertos de forma simpática, sin presionar a nadie.",
+        "Reproducir la canción completa cuando sea acertada, para celebrar juntos.",
+        "Al final, comentar cuáles canciones trajeron más recuerdos o anécdotas."
+      ],
+      materiales: "Celular, parlante, lista de canciones."
+    },
+    {
+      id: 3, cat: "recreativas",
+      titulo: "La caja de las sorpresas",
+      icono: "🎁",
+      objetivo: "Despertar la curiosidad, la memoria táctil y la conversación en torno a objetos cotidianos del pasado.",
+      metodo: "Se introduce en una caja una serie de objetos cotidianos. Un participante toma uno sin mirar y, mediante el tacto, debe adivinar qué es. También puede contar para qué lo utilizaba antiguamente.",
+      detalle: "Los objetos también guardan memoria. En esta actividad se utiliza una caja con objetos sencillos de uso diario (una cuchara, un peine, una llave grande, una taza, etc.). Cada participante, sin mirar, mete la mano, toca un objeto y trata de adivinar qué es. Cuando lo descubre, se le invita a contar cómo se usaba, si lo tuvo en su casa o qué recuerdos le trae. Es una actividad muy querida porque combina juego, sorpresa y conversación, y permite que incluso los más tímidos participen.",
+      pasos: [
+        "Reunir 8 a 12 objetos cotidianos seguros y variados.",
+        "Colocarlos en una caja de cartón con una abertura en la parte superior (cubierta con un pañuelo).",
+        "Explicar la dinámica: se mete la mano, se toca el objeto y se intenta adivinar sin mirar.",
+        "Pedir al participante que, si lo desea, cuente para qué servía el objeto o qué recuerdo le trae.",
+        "Ofrecer la caja a varios integrantes, sin obligar a nadie.",
+        "Cerrar mostrando todos los objetos y abriendo una conversación sobre los usos antiguos y actuales."
+      ],
+      materiales: "Caja de cartón, pañuelo y objetos seguros como peine, cuchara, llave grande, pelota o taza."
+    },
+    {
+      id: 4, cat: "recreativas",
+      titulo: "El bingo de las canciones",
+      icono: "🎶",
+      objetivo: "Combinar la emoción del bingo con el reconocimiento musical para ejercitar memoria y atención.",
+      metodo: "En lugar de números, cada cartón contiene títulos de canciones o nombres de cantantes. Se reproducen las canciones y los participantes marcan las que reconocen.",
+      detalle: "El bingo tradicional se transforma aquí en un juego musical. Cada cartón contiene títulos de canciones o nombres de artistas en lugar de números. A medida que el coordinador reproduce fragmentos de canciones, los participantes van marcando las que reconocen. La actividad mezcla la diversión del bingo con la memoria musical, y permite conversar sobre artistas y épocas. Funciona muy bien en grupos grandes y suele generar risas y comentarios espontáneos.",
+      pasos: [
+        "Elaborar a mano cartones de bingo con 9 o 12 títulos de canciones o cantantes.",
+        "Preparar una lista de reproducción con todas las canciones que aparecen en los cartones.",
+        "Repartir cartones y lápices o fichas a cada participante.",
+        "Reproducir una canción a la vez; quien la tenga en su cartón la marca.",
+        "Anunciar al ganador o ganadores con aplausos y sin presiones.",
+        "Repetir una segunda ronda si el grupo lo disfruta y conversar sobre las canciones."
+      ],
+      materiales: "Cartones elaborados a mano, lápices, celular y parlante."
+    },
+    {
+      id: 5, cat: "recreativas",
+      titulo: "Tarde de talentos",
+      icono: "🌟",
+      objetivo: "Reconocer y valorar las habilidades de cada integrante, fortaleciendo la autoestima y el sentido de pertenencia.",
+      metodo: "Cada integrante puede mostrar algo que sabe hacer: cantar, recitar, contar chistes, bailar sentado, narrar historias, dibujar o realizar una manualidad. No es un concurso.",
+      detalle: "Muchos integrantes del club tienen talentos que nunca han mostrado al grupo. Esta actividad ofrece un espacio amable para compartirlos: cantar, recitar un poema, contar un chiste, mostrar una manualidad, dibujar, contar historias o cualquier otra habilidad. Lo importante es dejar claro desde el inicio que no es un concurso ni una competencia; todos los aportes se reciben con aplausos. La actividad fortalece la autoestima, genera admiración mutua y descubre talentos que pueden aprovecharse en futuras actividades del club.",
+      pasos: [
+        "Anunciar la actividad con anticipación para que quien desee pueda prepararse.",
+        "Preparar un espacio sencillo al frente, con silla y micrófono opcional.",
+        "Recordar al grupo que no es un concurso y que todos los aportes son valiosos.",
+        "Invitar, sin presionar, a quienes quieran mostrar su talento.",
+        "Acompañar cada participación con aplausos y comentarios positivos.",
+        "Cerrar agradeciendo a todos y anotando talentos que puedan usarse en otras actividades."
+      ],
+      materiales: "Los que requiera cada talento; generalmente ninguno."
+    },
+    {
+      id: 6, cat: "recreativas",
+      titulo: "El concurso de refranes",
+      icono: "📜",
+      objetivo: "Ejercitar la memoria y el lenguaje a través de la sabiduría popular, fomentando la conversación y la risa.",
+      metodo: "El coordinador comienza un refrán y los participantes deben completarlo. También pueden explicar su significado o contar una anécdota relacionada.",
+      detalle: "Los refranes forman parte de la memoria colectiva y suelen venir cargados de humor y sabiduría. En esta actividad el coordinador dice la primera parte de un refrán y los participantes deben completarlo. Después, quien lo desee explica su significado o cuenta una anécdota asociada. Es una actividad muy sencilla de organizar y muy bien recibida, porque permite que todos participen sin esfuerzo y suele despertar risas y recuerdos. También se pueden ir recopilando refranes para formar un pequeño cancionero o cuaderno del club.",
+      pasos: [
+        "Preparar con anticipación una lista de refranes tradicionales.",
+        "Explicar la dinámica y dar un ejemplo para que todos entiendan.",
+        "Leer la primera parte del refrán y esperar a que alguien complete.",
+        "Invitar a quien lo desee a explicar el significado o contar una anécdota relacionada.",
+        "Anotar en un cuaderno los refranes que no estaban en la lista para conservarlos.",
+        "Cerrar con los refranes favoritos del grupo."
+      ],
+      materiales: "Tarjetas con refranes escritos."
+    },
+    {
+      id: 7, cat: "recreativas",
+      titulo: "¿Quién soy?",
+      icono: "🎭",
+      objetivo: "Ejercitar el razonamiento, la memoria y la formulación de preguntas mediante la identificación de personajes conocidos.",
+      metodo: "Se coloca una tarjeta en la frente de cada participante con el nombre de un personaje famoso, cantante, artista o figura histórica. Mediante preguntas de sí o no, debe descubrir quién es.",
+      detalle: "Este es un juego de ingenio y memoria muy entretenido. A cada participante se le coloca en la frente una tarjeta con el nombre de un personaje famoso (cantante, actor, político, deportista, figura histórica) sin que pueda verlo. Haciendo preguntas cuya respuesta sea 'sí' o 'no', debe ir descartando opciones hasta adivinar quién es. El resto del grupo responde con sinceridad y ayuda. La actividad ejercita el razonamiento, la formulación de preguntas y el conocimiento general, y permite incluir personajes significativos para el grupo (artistas de su juventud, figuras religiosas, etc.).",
+      pasos: [
+        "Preparar tarjetas con nombres de personajes variados y conocidos por el grupo.",
+        "Explicar la dinámica y dar un ejemplo de pregunta útil.",
+        "Colocar la tarjeta en la frente de cada participante, sin que la vea.",
+        "Permitir que cada uno haga preguntas de sí o no al grupo para ir descubriendo.",
+        "Acompañar con pistas amables si alguien se queda sin ideas.",
+        "Celebrar cada acierto y al final conversar sobre los personajes más recordados."
+      ],
+      materiales: "Papel, cinta adhesiva y lápices."
+    },
+    {
+      id: 8, cat: "recreativas",
+      titulo: "La hora de los chistes",
+      icono: "😂",
+      objetivo: "Favorecer la risa, el buen humor y la cohesión del grupo mediante el intercambio de anécdotas y chistes.",
+      metodo: "Cada persona comparte un chiste, una anécdota humorística o una situación graciosa que haya vivido. Se puede elegir al 'contador de chistes del día'.",
+      detalle: "La risa es una de las mejores medicinas para el alma. En esta actividad cada participante comparte un chiste, una anécdota divertida o una situación graciosa que haya vivido. No importa si el chiste es nuevo o repetido: lo valioso es el momento compartido. Al final se puede elegir, entre risas, al 'contador de chistes del día'. La actividad genera un clima distendido, fortalece los lazos afectivos y ayuda a que los integrantes se conozcan mejor. Es ideal para comenzar o cerrar una reunión.",
+      pasos: [
+        "Anunciar la actividad con tono alegre y sin presión.",
+        "Empezar el propio coordinador con un chiste o anécdota para romper el hielo.",
+        "Invitar a quienes deseen compartir uno; no es obligatorio.",
+        "Escuchar con atención y reír con genuinidad, sin juzgar el contenido.",
+        "Elegir democráticamente al 'contador de chistes del día'.",
+        "Cerrar con un comentario positivo sobre lo bien que hace reír juntos."
+      ],
+      materiales: "Ninguno."
+    },
+    {
+      id: 9, cat: "recreativas",
+      titulo: "Juegos de mesa rotativos",
+      icono: "🎲",
+      objetivo: "Mantener la mente activa y favorecer la integración entre integrantes que normalmente no comparten mesa.",
+      metodo: "Se organizan mesas de dominó, cartas, ludo, damas, ajedrez o bingo. Cada 30 minutos, quien desee puede cambiar de mesa y conocer nuevos compañeros.",
+      detalle: "Los juegos de mesa son una actividad clásica del club, pero la rotación les da un giro integrador. Se organizan varias mesas con distintos juegos (dominó, cartas, ludo, damas, ajedrez, bingo) y cada 30 minutos los participantes que lo deseen pueden cambiar de mesa. Esto favorece que se conozcan nuevos compañeros, se prueben juegos distintos y se rompan los pequeños grupos que suelen formarse. La actividad se desarrolla en un ambiente relajado, sin exigir competencia, y permite que cada uno juegue a su ritmo.",
+      pasos: [
+        "Organizar 3 o 4 mesas con juegos distintos que ya tenga el club.",
+        "Designar un 'anfitrión' por mesa que explique el juego a quien llegue.",
+        "Explicar la dinámica de rotación: cada 30 minutos, quien quiera cambia de mesa.",
+        "Acompañar con música suave o simplemente dejar que fluya la conversación.",
+        "Ofrecer agua y un pequeño refrigerio si es posible.",
+        "Al final, comentar qué juego disfrutaron más y qué compañeros nuevos conocieron."
+      ],
+      materiales: "Juegos que ya posee el club."
+    },
+    {
+      id: 10, cat: "recreativas",
+      titulo: "El teléfono descompuesto",
+      icono: "📞",
+      objetivo: "Ejercitar la atención y la escucha, y generar risas al comprobar cómo cambia un mensaje al transmitirse.",
+      metodo: "El coordinador susurra una frase al oído de la primera persona. Esta la transmite a la siguiente y así sucesivamente. Al final se compara la frase original con la que llegó.",
+      detalle: "Este juego tradicional nunca pasa de moda. El coordinador susurra una frase al oído del primer participante; este la repite al siguiente y así hasta el final. Cuando el último dice en voz alta lo que escuchó, se compara con la frase original y las risas están aseguradas. La actividad ejercita la atención, la escucha y la memoria auditiva, y muestra de forma divertida cómo un mensaje puede transformarse al pasar de persona en persona. Es ideal para grupos grandes y para cerrar una reunión con humor.",
+      pasos: [
+        "Formar un círculo o una fila con todos los participantes.",
+        "Elegir frases cortas y con palabras algo parecidas para hacerlo más divertido.",
+        "Susurrar la frase al oído del primero, sin que los demás escuchen.",
+        "Pedir que cada uno la transmita en voz baja al siguiente.",
+        "Al llegar al último, pedirle que diga la frase en voz alta.",
+        "Comparar con la original, reír juntos y repetir con otra frase si gusta."
+      ],
+      materiales: "Ninguno."
+    },
+    {
+      id: 11, cat: "recreativas",
+      titulo: "Tarde de cine y conversación",
+      icono: "🎬",
+      objetivo: "Disfrutar de una película en compañía y abrir una conversación sobre valores, recuerdos y aprendizajes.",
+      metodo: "Se proyecta una película antigua, comedia, documental o película con valores humanos. Al terminar, se conversa sobre lo que más gustó y las enseñanzas.",
+      detalle: "Ver una película juntos es una experiencia muy gratificante, sobre todo si después se conversa sobre ella. El coordinador elige un filme adecuado: una película antigua querida por el grupo, una comedia, un documental o una historia con valores humanos. Al finalizar, se abre una conversación sobre lo que más gustó, los personajes, los valores que transmite y las emociones que despertó. La actividad combina descanso, entretenimiento y reflexión, y permite que todos participen compartiendo opiniones.",
+      pasos: [
+        "Elegir la película con anticipación y verificar que sea apropiada para el grupo.",
+        "Preparar el espacio: sillas cómodas, buena iluminación y sonido claro.",
+        "Proyectar la película completa o por partes, con un breve descanso intermedio.",
+        "Al terminar, abrir la conversación con preguntas sencillas: ¿qué les gustó?, ¿qué sintieron?",
+        "Escuchar todas las opiniones sin apuro y sin corregir.",
+        "Cerrar agradeciendo la participación y comentando la próxima película."
+      ],
+      materiales: "Televisor o computadora, película, sillas."
+    },
+    {
+      id: 12, cat: "recreativas",
+      titulo: "La fiesta de una época",
+      icono: "🎉",
+      objetivo: "Fortalecer el sentido de pertenencia y la alegría grupal a través de celebraciones temáticas que evocan épocas y tradiciones.",
+      metodo: "Una vez al mes se organiza una tarde temática: años 60, años 70, música venezolana, boleros, gaitas, cumpleaños del mes o carnaval. Los asistentes pueden vestirse con algún accesorio alusivo.",
+      detalle: "Una fiesta temática al mes le da color y expectativa a la vida del club. Cada mes se elige una época o temática: los años 60, los 70, la música venezolana, los boleros, las gaitas, los cumpleaños del mes, el carnaval, etc. Los asistentes pueden venir con algún accesorio alusivo (un sombrero, una prenda, un pañuelo) y la decoración se hace con materiales reciclados. La música, la conversación y, si es posible, una merienda compartida, hacen que la actividad sea muy esperada. Fortalece la identidad del grupo y crea recuerdos felices.",
+      pasos: [
+        "Elegir con anticipación la temática del mes y anunciarla al grupo.",
+        "Preparar la música alusiva y una breve introducción sobre la época o tradición.",
+        "Decorar el espacio con materiales reciclados acordes a la temática.",
+        "Invitar a los asistentes a venir con un accesorio alusivo, sin obligación.",
+        "Compartir una merienda sencilla aportada voluntariamente por los integrantes.",
+        "Cerrar con una canción representativa de la época y una foto grupal (con autorización)."
+      ],
+      materiales: "Música, adornos reciclados, accesorios prestados."
+    },
+    /* ============ 2. MEMORIA (13–32) ============ */
+    {
+      id: 13, cat: "memoria",
+      titulo: "El baúl de los recuerdos",
+      icono: "📦",
+      objetivo: "Ejercitar la memoria autobiográfica y fortalecer los lazos afectivos al compartir historias personales.",
+      metodo: "Cada participante lleva, si lo desea, una fotografía, objeto antiguo o recuerdo personal. Cuenta su historia y lo que representa en su vida.",
+      detalle: "Cada objeto o fotografía guarda una historia. En esta actividad los integrantes traen, de forma voluntaria, una fotografía, un objeto antiguo o un recuerdo personal significativo. Uno a uno van contando qué es, de dónde viene y qué representa en su vida. Escuchar esas historias permite conocer mejor a los compañeros, valorar sus trayectorias y crear un ambiente de confianza. La actividad ejercita la memoria autobiográfica y el lenguaje, y suele ser muy emotiva. El coordinador debe cuidar el tiempo de cada participación y agradecer siempre la confianza.",
+      pasos: [
+        "Anunciar la actividad con anticipación para que quien quiera pueda traer su objeto.",
+        "Disponer una mesa al frente para colocar los objetos o fotografías.",
+        "Explicar que la participación es voluntaria y que se puede solo escuchar.",
+        "Invitar a cada participante a contar brevemente la historia de su recuerdo.",
+        "Escuchar con respeto, sin interrumpir, y hacer preguntas amables al final.",
+        "Cerrar agradeciendo las historias compartidas y, si se desea, tomar una foto grupal con los objetos."
+      ],
+      materiales: "Fotografías, objetos personales y una mesa."
+    },
+    {
+      id: 14, cat: "memoria",
+      titulo: "¿Qué había sobre la mesa?",
+      icono: "🔍",
+      objetivo: "Ejercitar la memoria visual y la atención sostenida mediante la observación de objetos.",
+      metodo: "Se colocan 10 objetos sobre una mesa. Todos los observan durante un minuto. Luego se cubren y los participantes intentan recordar la mayor cantidad posible.",
+      detalle: "Este juego es un clásico ejercicio de memoria visual. Se colocan sobre una mesa 10 objetos variados y todos los observan durante un minuto. Después se cubren con un pañuelo y los participantes, de forma individual o grupal, intentan recordar la mayor cantidad posible de objetos. Se puede jugar también retirando un objeto y preguntando cuál falta. La actividad es sencilla, no exige materiales especiales y resulta muy entretenida. Es importante mantener un clima amable y no convertir el ejercicio en una competencia estresante.",
+      pasos: [
+        "Reunir 10 objetos variados y fáciles de reconocer.",
+        "Colocarlos sobre una mesa y pedir a los participantes que se acerquen.",
+        "Dar un minuto para observarlos y memorizarlos.",
+        "Cubrir los objetos con un pañuelo o tela.",
+        "Pedir que, por turnos, digan los objetos que recuerdan.",
+        "Descubrir la mesa y comentar entre risas cuáles fueron los más olvidados."
+      ],
+      materiales: "Pañuelo o tela y objetos cotidianos."
+    },
+    {
+      id: 15, cat: "memoria",
+      titulo: "Palabras encadenadas",
+      icono: "🔗",
+      objetivo: "Ejercitar la fluidez verbal, el vocabulario y la memoria de trabajo mediante la asociación de palabras.",
+      metodo: "Una persona dice una palabra y la siguiente debe mencionar otra que comience con la última letra de la anterior. Por ejemplo: casa → avión → naranja.",
+      detalle: "Este juego ejercita la mente de forma ágil y divertida. Una persona comienza diciendo una palabra; la siguiente debe decir otra que empiece con la última letra de la anterior, y así sucesivamente. Se puede jugar en círculo, por equipos o de forma individual. La actividad estimula el vocabulario, la atención y la memoria de trabajo, y suele generar risas cuando alguien se queda sin palabras. Para evitar frustración, se puede permitir el uso de nombres propios, lugares o palabras inventadas, siempre con buen humor.",
+      pasos: [
+        "Explicar la dinámica con un ejemplo sencillo (casa → avión → naranja).",
+        "Formar un círculo con los participantes.",
+        "Comenzar con una palabra fácil y conocida.",
+        "Cada persona dice una palabra nueva que comience con la última letra.",
+        "Si alguien se queda sin ideas, el grupo puede ayudarlo con una pista.",
+        "Continuar hasta que el grupo lo disfrute y cerrar con un aplauso colectivo."
+      ],
+      materiales: "Ninguno."
+    },
+    {
+      id: 16, cat: "memoria",
+      titulo: "El abecedario de los recuerdos",
+      icono: "🔤",
+      objetivo: "Estimular la memoria, el vocabulario y la evocación de recuerdos a partir de cada letra del abecedario.",
+      metodo: "Se escoge una letra. Cada persona menciona un nombre, lugar, alimento, canción o recuerdo que comience con esa letra.",
+      detalle: "Cada letra del abecedario es una puerta a los recuerdos. En esta actividad se escoge una letra y cada participante menciona algo que comience con ella: un nombre, un lugar, un alimento, una canción o un recuerdo personal. Se puede jugar con una sola letra por sesión o recorrer el abecedario completo a lo largo de varias reuniones. La actividad ejercita la memoria, el vocabulario y la evocación, y permite que cada integrante comparta detalles de su vida. Es ideal para grupos pequeños y para combinar con otras actividades.",
+      pasos: [
+        "Elegir una letra, preferiblemente una que permita muchas respuestas.",
+        "Explicar al grupo las categorías posibles: nombre, lugar, alimento, canción, recuerdo.",
+        "Invitar a cada participante a decir al menos una palabra con esa letra.",
+        "Animar a que cuenten brevemente el recuerdo o la anécdota asociada.",
+        "Anotar en un cuaderno las respuestas más curiosas para conservarlas.",
+        "Cerrar la sesión con la letra del próximo encuentro."
+      ],
+      materiales: "Papel y lápiz opcionales."
+    },
+    {
+      id: 17, cat: "memoria",
+      titulo: "Trivia de nuestra juventud",
+      icono: "❓",
+      objetivo: "Ejercitar la memoria remota y el conocimiento general a través de preguntas sobre la época vivida.",
+      metodo: "Se preparan preguntas sobre historia, cultura popular, música, deportes, acontecimientos y costumbres de las décadas que vivieron los participantes.",
+      detalle: "La trivia es una excelente manera de ejercitar la memoria y compartir conocimientos. El coordinador prepara preguntas sobre historia, música, deportes, cine, costumbres y acontecimientos de las décadas que vivieron los participantes. Se puede jugar de forma individual, por equipos o en grupo, respondiendo entre todos. Lo importante es mantener un clima relajado, celebrando los aciertos y usando las preguntas como excusa para conversar sobre anécdotas. La actividad también permite que los integrantes más conocedores brillen y compartan lo que saben.",
+      pasos: [
+        "Elaborar con anticipación una lista de 15 a 20 preguntas variadas y adecuadas al grupo.",
+        "Organizar a los participantes en equipos o dejarlo grupal.",
+        "Hacer las preguntas una a una, dando tiempo para conversar la respuesta.",
+        "Celebrar los aciertos con aplausos y, si hay error, dar la respuesta correcta con humor.",
+        "Aprovechar cada pregunta para que alguien cuente una anécdota relacionada.",
+        "Cerrar con un reconocimiento al grupo por su memoria y sus conocimientos."
+      ],
+      materiales: "Preguntas impresas o escritas en tarjetas."
+    },
+    {
+      id: 18, cat: "memoria",
+      titulo: "Completa la historia",
+      icono: "📖",
+      objetivo: "Estimular la creatividad, la memoria y la expresión oral mediante la construcción colectiva de un relato.",
+      metodo: "El coordinador comienza una historia con una frase. Cada participante agrega una oración para continuarla. Al final se obtiene un relato colectivo divertido.",
+      detalle: "Construir una historia entre todos es una actividad creativa y muy entretenida. El coordinador comienza con una frase inicial ('Había una vez un pueblo pequeño...'), y cada participante agrega una oración para continuar el relato. La historia puede tomar rumbos inesperados y divertidos. La actividad estimula la creatividad, la memoria y la expresión oral, y permite que todos participen sin presión. Al final, el coordinador puede leer la historia completa, y si el grupo lo desea, se puede escribir en un cuaderno para conservarla como recuerdo del club.",
+      pasos: [
+        "Sentar al grupo en círculo para que todos se escuchen.",
+        "Comenzar con una frase inicial sencilla y motivadora.",
+        "Pedir a cada participante que agregue una oración, sin apuro.",
+        "Aceptar todas las ideas con entusiasmo, sin corregir.",
+        "Al terminar la ronda, leer la historia completa en voz alta.",
+        "Si el grupo lo desea, escribirla en un cuaderno para conservarla."
+      ],
+      materiales: "Ninguno; papel para escribir la historia final si se desea."
+    },
+    {
+      id: 19, cat: "memoria",
+      titulo: "Crucigramas colectivos",
+      icono: "✏️",
+      objetivo: "Ejercitar el lenguaje, la memoria y el trabajo en equipo mediante la resolución conjunta de un crucigrama.",
+      metodo: "Se coloca un crucigrama grande en una pizarra o papel. Todos colaboran para resolverlo.",
+      detalle: "Resolver un crucigrama en grupo es un ejercicio excelente para la mente y la convivencia. El coordinador prepara un crucigrama grande (puede ser uno sencillo sobre temas conocidos o adaptado a los intereses del grupo) y lo coloca en una pizarra o en un papel grande. Los participantes colaboran entre todos para completarlo, aportando palabras y recordando definiciones. La actividad ejercita el vocabulario, la memoria y el trabajo en equipo, y permite que los más conocedores ayuden a los demás. No debe haber presión por terminarlo.",
+      pasos: [
+        "Elegir o elaborar un crucigrama adecuado al grupo, con temas conocidos.",
+        "Copiarlo en grande en una pizarra o papel visible para todos.",
+        "Explicar la dinámica y leer la primera pista.",
+        "Animar a los participantes a proponer respuestas y a ayudarse entre sí.",
+        "Escribir las respuestas acertadas con un color llamativo.",
+        "Cerrar celebrando el trabajo en equipo, aunque no se haya completado."
+      ],
+      materiales: "Crucigramas impresos, lápices o pizarra."
+    },
+    {
+      id: 20, cat: "memoria",
+      titulo: "Sopa de letras temática",
+      icono: "🔠",
+      objetivo: "Ejercitar la atención visual y el reconocimiento de palabras mediante una búsqueda entre letras.",
+      metodo: "Se realizan sopas de letras con temas como Venezuela, frutas, animales, religión, música o profesiones.",
+      detalle: "La sopa de letras es una actividad sencilla y muy efectiva para mantener la mente activa. El coordinador prepara sopas de letras con temas cercanos al grupo: Venezuela, frutas, animales, religión, música, profesiones, etc. Los participantes buscan las palabras en la cuadrícula de letras, individualmente o en parejas. La actividad ejercita la atención visual, el reconocimiento de palabras y la paciencia, y permite que cada uno avance a su ritmo. Al final se pueden comentar las palabras encontradas y conversar sobre ellas.",
+      pasos: [
+        "Preparar con anticipación varias sopas de letras con temas distintos.",
+        "Explicar la dinámica y entregar una hoja a cada participante o pareja.",
+        "Acompañar a quien lo necesite, sin apurar a nadie.",
+        "Al terminar, invitar a comentar las palabras encontradas.",
+        "Conversar brevemente sobre el tema de la sopa de letras.",
+        "Cerrar con aplausos y, si se desea, intercambiar hojas entre compañeros."
+      ],
+      materiales: "Hojas impresas y lápices."
+    },
+    {
+      id: 21, cat: "memoria",
+      titulo: "El juego de las diferencias",
+      icono: "🖼️",
+      objetivo: "Ejercitar la atención, la percepción visual y la concentración mediante la comparación de imágenes.",
+      metodo: "Se presentan dos imágenes similares y los asistentes deben identificar las diferencias.",
+      detalle: "Este juego ejercita la atención y la percepción visual. Se presentan dos imágenes casi idénticas (por ejemplo, dos paisajes o dos escenas costumbristas) y los participantes deben identificar las diferencias entre una y otra. Se puede hacer de forma individual, en parejas o en grupo, señalando las diferencias en voz alta. La actividad estimula la concentración, el diálogo y el trabajo en equipo. Es ideal para días tranquilos y se puede combinar con una breve conversación sobre lo que muestran las imágenes.",
+      pasos: [
+        "Seleccionar o preparar dos imágenes similares con varias diferencias claras.",
+        "Imprimirlas en tamaño visible o proyectarlas en una pantalla.",
+        "Explicar la dinámica y dar un tiempo para observarlas.",
+        "Animar a los participantes a señalar las diferencias que encuentren.",
+        "Conversar brevemente sobre lo que muestran las imágenes.",
+        "Cerrar con aplausos y, si se desea, proponer otra imagen para la próxima reunión."
+      ],
+      materiales: "Imágenes impresas."
+    },
+    {
+      id: 22, cat: "memoria",
+      titulo: "¿Qué objeto ha cambiado?",
+      icono: "🔎",
+      objetivo: "Ejercitar la memoria visual y la atención mediante la detección de cambios en una disposición de objetos.",
+      metodo: "Se colocan objetos sobre una mesa. Los participantes los observan. Luego se cambia la posición de uno o se retira un objeto y deben identificar el cambio.",
+      detalle: "Este juego es una variante del clásico ejercicio de memoria visual. Se colocan entre 8 y 12 objetos sobre una mesa y los participantes los observan durante un momento. Después se les pide que cierren los ojos o se den la vuelta, y el coordinador cambia la posición de uno o retira un objeto. Al abrir los ojos, deben identificar qué cambió. La actividad ejercita la memoria visual, la atención y la percepción, y suele generar risas. Se puede jugar varias rondas cambiando la dificultad.",
+      pasos: [
+        "Colocar de 8 a 12 objetos variados sobre una mesa.",
+        "Dar un momento para que todos los observen con atención.",
+        "Pedir que cierren los ojos o se den la vuelta.",
+        "Cambiar la posición de un objeto o retirarlo.",
+        "Pedir que digan qué cambió, dando tiempo y sin presionar.",
+        "Repetir varias rondas, aumentando la dificultad si el grupo lo disfruta."
+      ],
+      materiales: "8 a 12 objetos pequeños y una mesa."
+    },
+    {
+      id: 23, cat: "memoria",
+      titulo: "La palabra prohibida",
+      icono: "🚫",
+      objetivo: "Ejercitar la atención, el autocontrol y la fluidez verbal mediante una conversación con restricciones.",
+      metodo: "Conversar sobre un tema sin mencionar una palabra determinada. Por ejemplo, hablar de frutas sin decir 'manzana'.",
+      detalle: "Este juego ejercita la atención y el autocontrol de una forma muy entretenida. Se elige un tema (frutas, viajes, familia, comida, etc.) y una palabra prohibida que no se puede mencionar. Los participantes conversan sobre el tema evitando decir esa palabra. Si alguien la dice, puede pagar una prenda simpática (cantar una canción, contar un chiste). La actividad estimula la fluidez verbal, la atención y la memoria de trabajo, y genera muchas risas. Es ideal para grupos pequeños y para cerrar una reunión con humor.",
+      pasos: [
+        "Elegir un tema conocido y una palabra prohibida relacionada.",
+        "Explicar la dinámica y dar un ejemplo.",
+        "Iniciar la conversación sobre el tema, evitando la palabra prohibida.",
+        "Animar a todos a participar y a ayudarse entre sí.",
+        "Si alguien dice la palabra prohibida, proponer una prenda simpática.",
+        "Cerrar la actividad con risas y comentando lo difícil que resultó."
+      ],
+      materiales: "Tarjetas con palabras."
+    },
+    {
+      id: 24, cat: "memoria",
+      titulo: "Recordando nuestra ciudad",
+      icono: "🏙️",
+      objetivo: "Evocar la memoria colectiva y el sentido de pertenencia mediante el recuerdo de lugares y costumbres.",
+      metodo: "Nombrar lugares, plazas, comercios, calles, personajes y costumbres del lugar donde vivieron.",
+      detalle: "La ciudad o el barrio donde vivimos guarda miles de recuerdos. En esta actividad los participantes nombran lugares, plazas, comercios, calles, personajes y costumbres del lugar donde vivieron o viven. Se puede hacer como una conversación abierta o como una lluvia de ideas anotadas en una pizarra. La actividad ejercita la memoria remota, el lenguaje y el sentido de pertenencia, y permite que los integrantes compartan anécdotas y revivan épocas. Si es posible, se pueden mostrar fotografías antiguas del lugar para enriquecer la conversación.",
+      pasos: [
+        "Preparar, si es posible, algunas fotografías antiguas del lugar.",
+        "Explicar la dinámica: recordar juntos lugares y costumbres.",
+        "Animar a los participantes a nombrar lugares, calles, comercios y personajes.",
+        "Anotar en una pizarra o cuaderno las ideas que surjan.",
+        "Invitar a contar anécdotas asociadas a esos lugares.",
+        "Cerrar agradeciendo los recuerdos compartidos y, si se desea, mostrando las fotos."
+      ],
+      materiales: "Fotografías antiguas opcionales."
+    },
+    {
+      id: 25, cat: "memoria",
+      titulo: "La receta de mi familia",
+      icono: "🍲",
+      objetivo: "Evocar la memoria afectiva y familiar, y construir un recetario colectivo del club.",
+      metodo: "Cada integrante describe una receta que preparaba su madre, abuela o familia. Se crea un recetario colectivo.",
+      detalle: "Las recetas familiares son un tesoro que merece ser compartido. En esta actividad cada participante describe una receta que preparaba su madre, abuela o familia: los ingredientes, los pasos, el aroma, la ocasión en que se preparaba y los recuerdos asociados. El coordinador va anotando las recetas y, con el tiempo, se puede formar un recetario colectivo del club. La actividad ejercita la memoria, el lenguaje y la afectividad, y permite que los integrantes compartan tradiciones y se sientan valorados.",
+      pasos: [
+        "Anunciar la actividad con anticipación para que quien desee prepare su receta.",
+        "Disponer un cuaderno o carpeta para ir recopilando las recetas.",
+        "Invitar a cada participante a describir su receta y los recuerdos asociados.",
+        "Anotar los ingredientes y pasos principales de cada receta.",
+        "Conversar sobre el origen familiar de las recetas y las ocasiones en que se preparaban.",
+        "Cerrar agradeciendo y, si es posible, planear una merienda con alguna de las recetas."
+      ],
+      materiales: "Cuaderno, lápices y hojas."
+    },
+    {
+      id: 26, cat: "memoria",
+      titulo: "Ordenando la historia",
+      icono: "📋",
+      objetivo: "Ejercitar la lógica, la secuenciación y la memoria de procesos mediante la ordenación de tarjetas.",
+      metodo: "Se entregan tarjetas con acontecimientos de una historia o proceso cotidiano desordenados. El grupo debe ponerlos en secuencia.",
+      detalle: "Esta actividad ejercita el razonamiento y la lógica. El coordinador prepara tarjetas con los pasos de un proceso cotidiano (por ejemplo, preparar un café, sembrar una planta, viajar en autobús) o de una historia conocida, y las entrega desordenadas. Los participantes, en grupo, deben ponerlas en la secuencia correcta. La actividad estimula la secuenciación, la memoria de procesos y el trabajo en equipo, y permite conversar sobre cómo han cambiado esos procesos con el tiempo. Se puede adaptar la dificultad según el grupo.",
+      pasos: [
+        "Preparar con anticipación las tarjetas con los pasos de un proceso o historia.",
+        "Entregar las tarjetas desordenadas al grupo.",
+        "Explicar que deben ponerlas en la secuencia correcta entre todos.",
+        "Acompañar con preguntas que ayuden a pensar el orden.",
+        "Al terminar, leer la secuencia completa en voz alta y comentarla.",
+        "Conversar sobre cómo han cambiado esos procesos con el tiempo."
+      ],
+      materiales: "Tarjetas de papel."
+    },
+    {
+      id: 27, cat: "memoria",
+      titulo: "El desafío matemático cotidiano",
+      icono: "🧮",
+      objetivo: "Ejercitar el cálculo mental y la memoria de trabajo mediante problemas sencillos de la vida diaria.",
+      metodo: "Resolver problemas sencillos de compras, cambio de dinero, medidas, cantidades o cálculo mental.",
+      detalle: "Las matemáticas están presentes en la vida diaria y ejercitarlas es muy beneficioso. En esta actividad se plantean problemas sencillos: cuánto cuesta una compra, cuánto cambio deben devolver, cuántos ingredientes se necesitan para una receta, cuántos días faltan para una fecha, etc. Se puede resolver de forma individual, en grupo o en la pizarra, y sin presión de tiempo. La actividad ejercita el cálculo mental, la memoria de trabajo y la autonomía, y permite que los participantes se sientan capaces y valorados.",
+      pasos: [
+        "Preparar una lista de problemas sencillos y variados, cercanos a la vida diaria.",
+        "Presentar el primer problema con claridad, en la pizarra o en voz alta.",
+        "Dar tiempo para pensar y animar a proponer respuestas.",
+        "Resolver juntos, explicando el razonamiento.",
+        "Celebrar los aciertos y acompañar con amabilidad los errores.",
+        "Cerrar comentando lo útiles que son las matemáticas en la vida diaria."
+      ],
+      materiales: "Pizarra, papel y lápices."
+    },
+    {
+      id: 28, cat: "memoria",
+      titulo: "Adivinanzas populares",
+      icono: "🎯",
+      objetivo: "Ejercitar el razonamiento, la memoria y el lenguaje mediante adivinanzas tradicionales.",
+      metodo: "Se leen adivinanzas tradicionales y se invita a resolverlas colectivamente.",
+      detalle: "Las adivinanzas populares son un tesoro de la cultura oral. En esta actividad el coordinador lee adivinanzas tradicionales y los participantes intentan resolverlas, de forma individual o colectiva. Se puede acompañar cada adivinanza con una conversación sobre su origen, las versiones que conocían y las que se han transmitido en familia. La actividad ejercita el razonamiento, la memoria y el lenguaje, y suele ser muy entretenida. Al final se pueden recopilar las adivinanzas favoritas para conservarlas en un cuaderno del club.",
+      pasos: [
+        "Preparar una lista de adivinanzas tradicionales variadas.",
+        "Explicar la dinámica y leer la primera adivinanza.",
+        "Dar tiempo para pensar y animar a proponer respuestas.",
+        "Celebrar cada acierto y comentar la respuesta.",
+        "Invitar a quienes conozcan otras adivinanzas a compartirlas.",
+        "Cerrar recopilando las favoritas para un cuaderno del club."
+      ],
+      materiales: "Tarjetas o lista de adivinanzas."
+    },
+    {
+      id: 29, cat: "memoria",
+      titulo: "El diccionario de palabras antiguas",
+      icono: "📚",
+      objetivo: "Evocar la memoria lingüística y valorar la riqueza del lenguaje tradicional mediante la recuperación de palabras antiguas.",
+      metodo: "Cada participante propone palabras que se usaban antiguamente y explica su significado. Se crea un pequeño diccionario de expresiones tradicionales.",
+      detalle: "El lenguaje también guarda memoria. En esta actividad los participantes proponen palabras o expresiones que se usaban antiguamente y explican su significado y cómo se usaban. El coordinador va anotando todo en un cuaderno para formar un pequeño diccionario de expresiones tradicionales del club. La actividad ejercita la memoria lingüística, el lenguaje y el sentido de pertenencia, y permite que los integrantes compartan su riqueza cultural. Puede ser una actividad recurrente, que se retoma en varias sesiones.",
+      pasos: [
+        "Anunciar la actividad con anticipación para que los participantes piensen palabras.",
+        "Disponer un cuaderno o carpeta para el diccionario.",
+        "Invitar a cada participante a proponer una palabra o expresión antigua.",
+        "Anotar la palabra, su significado y un ejemplo de uso.",
+        "Conversar sobre cómo han cambiado esas palabras con el tiempo.",
+        "Cerrar leyendo el diccionario construido y proponiendo continuarlo en próximas sesiones."
+      ],
+      materiales: "Cuaderno."
+    },
+    {
+      id: 30, cat: "memoria",
+      titulo: "Conversación sobre una fotografía",
+      icono: "📷",
+      objetivo: "Ejercitar la memoria visual y la evocación mediante la observación y descripción de imágenes antiguas.",
+      metodo: "Se muestra una imagen antigua de una boda, escuela, plaza o familia. Los asistentes describen lo que observan e imaginan cómo era aquella época.",
+      detalle: "Una fotografía antigua es una ventana al pasado. En esta actividad el coordinador muestra una imagen antigua (una boda, una escuela, una plaza, una familia, un comercio) y los participantes describen lo que observan: la ropa, los objetos, los gestos, el lugar. A partir de la imagen, imaginan cómo era aquella época y comparten recuerdos y anécdotas. La actividad ejercita la memoria visual, la observación y el lenguaje, y permite que los integrantes conecten con su historia personal y colectiva. Se puede hacer con imágenes impresas o proyectadas.",
+      pasos: [
+        "Seleccionar una o varias imágenes antiguas y significativas.",
+        "Mostrar la imagen al grupo y dar un momento para observarla.",
+        "Invitar a describir lo que ven: personas, ropa, objetos, lugar.",
+        "Animar a imaginar cómo era la época y a compartir recuerdos.",
+        "Escuchar con atención y agradecer cada intervención.",
+        "Cerrar comentando lo valioso de conservar y compartir esas imágenes."
+      ],
+      materiales: "Fotografías impresas."
+    },
+    {
+      id: 31, cat: "memoria",
+      titulo: "El juego de las categorías",
+      icono: "🗂️",
+      objetivo: "Ejercitar la fluidez mental, el vocabulario y la memoria de trabajo mediante la enumeración de elementos de una categoría.",
+      metodo: "Se elige una categoría (animales, ciudades, alimentos, profesiones). Cada persona dice un elemento diferente sin repetir los anteriores.",
+      detalle: "Este juego ejercita la agilidad mental y el vocabulario. Se elige una categoría (animales, ciudades, alimentos, profesiones, flores, canciones, etc.) y cada participante debe decir un elemento diferente sin repetir los anteriores. Se puede jugar en círculo, por equipos o de forma individual, y con tiempo libre para pensar. La actividad estimula la fluidez mental, la memoria de trabajo y la atención, y permite que todos participen sin presión. Se puede ir aumentando la dificultad cambiando de categoría o pidiendo palabras cada vez más específicas.",
+      pasos: [
+        "Elegir una categoría amplia y conocida por el grupo.",
+        "Explicar la dinámica y dar un ejemplo.",
+        "Formar un círculo y comenzar con un elemento.",
+        "Cada participante dice un elemento nuevo sin repetir los anteriores.",
+        "Si alguien se queda sin ideas, el grupo puede ayudar con una pista.",
+        "Cambiar de categoría cuando el grupo lo desee y cerrar con un aplauso."
+      ],
+      materiales: "Ninguno."
+    },
+    {
+      id: 32, cat: "memoria",
+      titulo: "Pictionary de la tercera edad",
+      icono: "🎨",
+      objetivo: "Ejercitar la expresión gráfica, la creatividad y la memoria mediante el dibujo y la adivinación.",
+      metodo: "Un participante dibuja un objeto, una profesión o una acción y los demás intentan adivinar.",
+      detalle: "Pictionary es un juego de dibujo y adivinación que resulta muy entretenido. En esta versión adaptada, un participante dibuja en una pizarra o papel un objeto, una profesión o una acción cotidiana, y los demás intentan adivinar qué es. No importa si el dibujo es detallado o sencillo: lo importante es la diversión y la participación. La actividad ejercita la expresión gráfica, la creatividad y la memoria, y permite que todos participen sin presión. Se puede jugar por equipos o de forma grupal.",
+      pasos: [
+        "Preparar con anticipación tarjetas con objetos, profesiones o acciones fáciles de dibujar.",
+        "Explicar la dinámica y dar un ejemplo.",
+        "Invitar a un participante a pasar al frente y tomar una tarjeta.",
+        "Darle un tiempo breve para dibujar mientras los demás adivinan.",
+        "Celebrar cada acierto y animar a otros a pasar al frente.",
+        "Cerrar comentando los dibujos más divertidos."
+      ],
+      materiales: "Papel, lápices o pizarra."
+    },
+    /* ============ 3. ESPIRITUALES (33–44) ============ */
+    {
+      id: 33, cat: "espirituales",
+      titulo: "El círculo de la gratitud",
+      icono: "🙏",
+      objetivo: "Fortalecer el bienestar emocional y espiritual mediante el reconocimiento y la expresión de la gratitud.",
+      metodo: "Cada persona comparte algo por lo que se siente agradecida ese día: la familia, la amistad, la salud, un alimento, una conversación o la vida.",
+      detalle: "La gratitud es una práctica sencilla que transforma la manera de ver la vida. En esta actividad, cada participante comparte algo por lo que se siente agradecido ese día: la familia, la amistad, la salud, un alimento, una conversación, la vida misma. Se puede hacer en círculo, con una vela o un objeto que se pasa de mano en mano, para darle un tono simbólico. La actividad fortalece el bienestar emocional y espiritual, crea un clima de paz y conexión, y ayuda a valorar lo cotidiano. Es ideal para comenzar o cerrar una reunión.",
+      pasos: [
+        "Formar un círculo con los participantes.",
+        "Explicar la dinámica y dar un ejemplo de gratitud.",
+        "Pasar un objeto simbólico (una vela, una flor, una piedra) al primero que desee hablar.",
+        "Escuchar con respeto y en silencio cada intervención.",
+        "Agradecer a cada persona por compartir.",
+        "Cerrar con un momento breve de silencio o una frase de agradecimiento grupal."
+      ],
+      materiales: "Ninguno."
+    },
+    {
+      id: 34, cat: "espirituales",
+      titulo: "Lectura y reflexión del Evangelio",
+      icono: "📖",
+      objetivo: "Fortalecer la fe y la reflexión espiritual mediante la lectura y el comentario de un pasaje del Evangelio.",
+      metodo: "Se lee un pasaje breve del Evangelio. Después, los asistentes comparten qué enseñanza les deja y cómo pueden aplicarla en su vida cotidiana.",
+      detalle: "La lectura del Evangelio en comunidad es un momento de encuentro y reflexión. Se elige un pasaje breve y adecuado, se lee en voz alta y luego se invita a los participantes a compartir qué enseñanza les deja y cómo pueden aplicarla en su vida cotidiana. La actividad fortalece la fe, la reflexión espiritual y el sentido de comunidad, y permite que cada uno se exprese libremente. El coordinador debe cuidar un clima de respeto y apertura, sin imponer interpretaciones, y recordar que la participación es voluntaria.",
+      pasos: [
+        "Elegir con anticipación un pasaje breve y adecuado al grupo.",
+        "Preparar un ambiente tranquilo y, si es posible, con una imagen religiosa.",
+        "Leer el pasaje en voz alta con calma.",
+        "Dar un momento de silencio para la reflexión personal.",
+        "Invitar a quienes deseen compartir qué enseñanza les deja.",
+        "Cerrar con una breve oración o un momento de silencio agradecido."
+      ],
+      materiales: "Biblia impresa o digital."
+    },
+    {
+      id: 35, cat: "espirituales",
+      titulo: "Rosario comunitario",
+      icono: "📿",
+      objetivo: "Fortalecer la fe y el sentido de comunidad mediante la oración compartida del Santo Rosario.",
+      metodo: "Se organiza un momento de oración del Santo Rosario, por las familias, los enfermos, los fallecidos y las necesidades de la comunidad.",
+      detalle: "El Rosario es una oración tradicional muy querida por muchos integrantes del club. En esta actividad se organiza un momento para rezarlo juntos, ofreciéndolo por las familias, los enfermos, los fallecidos y las necesidades de la comunidad. El coordinador puede guiar la oración o invitar a distintos participantes a dirigir cada misterio, fomentando la participación. La actividad fortalece la fe, el sentido de comunidad y el consuelo espiritual, y permite que quienes lo deseen se sientan acompañados. Es importante respetar a quienes no participen por sus creencias.",
+      pasos: [
+        "Elegir un día y hora adecuados para la oración.",
+        "Preparar el espacio con silencio y, si es posible, una imagen religiosa.",
+        "Designar a quienes guiarán cada parte del Rosario.",
+        "Rezar juntos, con calma, ofreciendo las intenciones de la comunidad.",
+        "Dar un momento final para intenciones personales voluntarias.",
+        "Cerrar con un canto o una oración final y un gesto de paz."
+      ],
+      materiales: "Rosarios; opcionalmente, una imagen religiosa."
+    },
+    {
+      id: 36, cat: "espirituales",
+      titulo: "El árbol de las bendiciones",
+      icono: "🌳",
+      objetivo: "Fortalecer el bienestar espiritual y la gratitud mediante la expresión escrita y simbólica de las bendiciones recibidas.",
+      metodo: "Cada participante escribe en una hoja de papel una bendición recibida o un mensaje positivo. Las hojas se colocan en un árbol simbólico elaborado con cartón.",
+      detalle: "El árbol de las bendiciones es una actividad simbólica muy hermosa. El coordinador prepara un árbol de cartón (puede estar pegado en una pared o de pie) y reparte hojas de papel de colores. Cada participante escribe una bendición recibida o un mensaje positivo, y luego cuelga su hoja en el árbol. Al final, el árbol queda lleno de mensajes que pueden leerse en voz alta o dejarse como testimonio visible. La actividad fortalece la gratitud, la reflexión espiritual y el sentido de comunidad, y deja un recuerdo tangible en el espacio del club.",
+      pasos: [
+        "Elaborar con anticipación un árbol de cartón, con ramas visibles.",
+        "Repartir hojas de papel de colores y lápices.",
+        "Explicar la dinámica y dar un ejemplo de mensaje.",
+        "Invitar a cada participante a escribir una bendición o mensaje positivo.",
+        "Colgar las hojas en el árbol, leyendo algunas en voz alta si se desea.",
+        "Cerrar agradeciendo y dejando el árbol expuesto en el espacio del club."
+      ],
+      materiales: "Cartón, papel de colores, lápices, pegamento."
+    },
+    {
+      id: 37, cat: "espirituales",
+      titulo: "Oración por nuestros seres queridos",
+      icono: "🕯️",
+      objetivo: "Fortalecer el acompañamiento espiritual y el consuelo mediante la oración por las personas queridas.",
+      metodo: "Se dedica un momento a recordar y orar por familiares, amigos y miembros del club que atraviesan dificultades, siempre con autorización para mencionar sus nombres.",
+      detalle: "La oración por los seres queridos es un gesto de amor y acompañamiento. En esta actividad se dedica un momento a recordar y orar por familiares, amigos y miembros del club que atraviesan dificultades. El coordinador puede llevar una lista voluntaria de intenciones, respetando siempre la autorización para mencionar nombres. La actividad fortalece la fe, el consuelo espiritual y el sentido de comunidad, y permite que quienes atraviesan momentos difíciles se sientan acompañados. Es importante cuidar el clima de respeto y silencio.",
+      pasos: [
+        "Preparar con anticipación una lista voluntaria de intenciones.",
+        "Disponer un espacio tranquilo, con una vela o imagen si se desea.",
+        "Explicar la dinámica y recordar que la participación es voluntaria.",
+        "Leer las intenciones y orar por cada una, con calma.",
+        "Dar un momento de silencio para intenciones personales.",
+        "Cerrar con una oración final o un gesto de paz."
+      ],
+      materiales: "Lista voluntaria de intenciones."
+    },
+    {
+      id: 38, cat: "espirituales",
+      titulo: "Meditación de la paz",
+      icono: "🧘",
+      objetivo: "Favorecer la relajación, el bienestar emocional y la conexión interior mediante una breve meditación guiada.",
+      metodo: "Se invita a los asistentes a sentarse cómodamente, respirar suavemente y permanecer en silencio durante 5 a 10 minutos. Se puede acompañar con música instrumental tranquila o una reflexión breve.",
+      detalle: "La meditación es una práctica sencilla que aporta calma y bienestar. En esta actividad se invita a los participantes a sentarse cómodamente, respirar suavemente y permanecer en silencio durante 5 a 10 minutos, con los ojos cerrados o mirando un punto fijo. Se puede acompañar con música instrumental tranquila o con una breve reflexión guiada sobre la paz, la gratitud o el descanso. La actividad favorece la relajación, reduce el estrés y fortalece la conexión interior. El coordinador debe hablar con voz suave y respetar el ritmo de cada participante.",
+      pasos: [
+        "Preparar un espacio tranquilo, con sillas cómodas y luz suave.",
+        "Explicar la dinámica y recordar que cada uno puede adaptarla a su comodidad.",
+        "Invitar a sentarse, cerrar los ojos o mirar un punto fijo.",
+        "Guiar la respiración suave durante unos minutos, con voz calmada.",
+        "Ofrecer una breve reflexión sobre la paz o el descanso.",
+        "Cerrar invitando a abrir los ojos lentamente y compartir cómo se sienten."
+      ],
+      materiales: "Sillas y música opcional."
+    },
+    {
+      id: 39, cat: "espirituales",
+      titulo: "Testimonios de fe y esperanza",
+      icono: "💫",
+      objetivo: "Fortalecer la esperanza y el sentido de comunidad mediante el intercambio de experiencias personales.",
+      metodo: "Cada persona que lo desee cuenta una experiencia en la que la fe, la esperanza o el apoyo de otras personas le ayudaron a superar una dificultad.",
+      detalle: "Compartir testimonios es una forma profunda de acompañarse. En esta actividad, cada persona que lo desee cuenta una experiencia en la que la fe, la esperanza o el apoyo de otras personas le ayudaron a superar una dificultad. Escuchar estos relatos fortalece la esperanza, la empatía y el sentido de comunidad, y permite que los integrantes se sientan valorados y acompañados. El coordinador debe cuidar un clima de respeto absoluto, sin forzar a nadie a hablar y agradeciendo siempre la confianza. Es recomendable cerrar con un momento de silencio o una oración breve.",
+      pasos: [
+        "Anunciar la actividad con anticipación, dejando claro que es voluntaria.",
+        "Preparar un espacio tranquilo y acogedor.",
+        "Explicar la dinámica y dar un ejemplo breve.",
+        "Invitar a quienes deseen compartir su testimonio.",
+        "Escuchar con respeto absoluto, sin interrumpir.",
+        "Cerrar agradeciendo cada testimonio y con un momento de silencio o una oración breve."
+      ],
+      materiales: "Ninguno."
+    },
+    {
+      id: 40, cat: "espirituales",
+      titulo: "Lectura de salmos",
+      icono: "📜",
+      objetivo: "Fortalecer la fe y el bienestar espiritual mediante la lectura y el comentario de los salmos.",
+      metodo: "Se seleccionan salmos relacionados con la paz, la alegría, la confianza o la gratitud. Se leen en voz alta y se comentan brevemente.",
+      detalle: "Los salmos son textos espirituales muy queridos que acompañan desde hace siglos. En esta actividad se seleccionan salmos relacionados con la paz, la alegría, la confianza o la gratitud, y se leen en voz alta. Luego se invita a los participantes a comentar brevemente qué les dice cada salmo y cómo se relaciona con su vida. La actividad fortalece la fe, la reflexión y el bienestar espiritual, y permite que cada uno se exprese libremente. Es ideal para momentos tranquilos y para enriquecer la vida espiritual del club.",
+      pasos: [
+        "Seleccionar con anticipación salmos variados y adecuados al grupo.",
+        "Preparar un ambiente tranquilo y, si es posible, con una imagen religiosa.",
+        "Leer cada salmo en voz alta con calma.",
+        "Dar un momento de silencio para la reflexión personal.",
+        "Invitar a quienes deseen compartir qué les dice el salmo.",
+        "Cerrar con una breve oración o un momento de silencio."
+      ],
+      materiales: "Biblia."
+    },
+    {
+      id: 41, cat: "espirituales",
+      titulo: "El mensaje positivo del día",
+      icono: "☀️",
+      objetivo: "Fortalecer el bienestar emocional y espiritual mediante la reflexión sobre frases inspiradoras.",
+      metodo: "Cada reunión comienza con una frase inspiradora. Los asistentes comentan qué significa para ellos.",
+      detalle: "Comenzar la reunión con una frase inspiradora marca un tono positivo para todo el encuentro. En esta actividad el coordinador lleva una frase o reflexión breve y la lee al grupo. Después invita a los participantes a comentar qué significa para ellos, si les recuerda alguna experiencia o cómo pueden aplicarla en su vida diaria. La actividad fortalece el bienestar emocional y espiritual, fomenta la reflexión y crea un clima de apertura y confianza. Con el tiempo, se pueden recopilar las frases favoritas en un cuaderno del club.",
+      pasos: [
+        "Preparar con anticipación una frase inspiradora adecuada al grupo.",
+        "Leer la frase en voz alta al inicio de la reunión.",
+        "Dar un momento de silencio para reflexionar.",
+        "Invitar a quienes deseen compartir qué les dice la frase.",
+        "Anotar las frases favoritas en un cuaderno para conservarlas.",
+        "Cerrar agradeciendo la participación y deseando un buen día."
+      ],
+      materiales: "Tarjetas con frases."
+    },
+    {
+      id: 42, cat: "espirituales",
+      titulo: "Taller de valores humanos",
+      icono: "❤️",
+      objetivo: "Reflexionar sobre los valores humanos y su aplicación en la vida diaria, fortaleciendo la convivencia.",
+      metodo: "Cada semana se aborda un valor: respeto, paciencia, solidaridad, humildad, perdón, amistad o generosidad. Se comparten ejemplos de la vida real.",
+      detalle: "Los valores humanos son el fundamento de una buena convivencia. En este taller, cada semana se aborda un valor distinto: respeto, paciencia, solidaridad, humildad, perdón, amistad, generosidad, etc. El coordinador presenta el valor con una breve reflexión y luego invita a los participantes a compartir ejemplos de la vida real, anécdotas o situaciones en las que ese valor estuvo presente. La actividad fortalece la reflexión, la convivencia y el crecimiento personal, y permite que los integrantes aprendan unos de otros. Puede complementarse con lecturas breves o frases alusivas.",
+      pasos: [
+        "Elegir con anticipación el valor que se abordará en la sesión.",
+        "Preparar una breve reflexión o presentación sobre el valor.",
+        "Invitar a los participantes a compartir ejemplos o anécdotas.",
+        "Anotar las ideas principales en una pizarra o cuaderno.",
+        "Conversar sobre cómo aplicar ese valor en la vida diaria.",
+        "Cerrar con un compromiso sencillo para la semana y anunciar el próximo valor."
+      ],
+      materiales: "Tarjetas con valores y preguntas de reflexión."
+    },
+    {
+      id: 43, cat: "espirituales",
+      titulo: "El legado de nuestras vidas",
+      icono: "🌱",
+      objetivo: "Reflexionar sobre las enseñanzas y valores que cada persona desea dejar a las nuevas generaciones.",
+      metodo: "Cada integrante comparte una enseñanza que quisiera dejar a sus hijos, nietos, familiares o jóvenes de la comunidad.",
+      detalle: "Cada vida tiene enseñanzas valiosas que merecen ser transmitidas. En esta actividad, cada integrante comparte una enseñanza, un consejo o un valor que quisiera dejar a sus hijos, nietos, familiares o a los jóvenes de la comunidad. El coordinador va recopilando las enseñanzas en un cuaderno, que se convierte en un pequeño legado colectivo del club. La actividad fortalece el sentido de trascendencia, la reflexión espiritual y el reconocimiento del valor de la experiencia vivida, y permite que los participantes se sientan valorados y escuchados.",
+      pasos: [
+        "Anunciar la actividad con anticipación para que los participantes piensen su enseñanza.",
+        "Disponer un cuaderno o carpeta para recopilar los legados.",
+        "Invitar a cada participante a compartir una enseñanza.",
+        "Anotar las enseñanzas con las palabras del propio participante.",
+        "Conversar sobre el valor de transmitir la experiencia.",
+        "Cerrar agradeciendo y leyendo algunas enseñanzas en voz alta."
+      ],
+      materiales: "Cuaderno para recopilar las enseñanzas."
+    },
+    {
+      id: 44, cat: "espirituales",
+      titulo: "Celebración de cumpleaños y acción de gracias",
+      icono: "🎂",
+      objetivo: "Celebrar la vida y fortalecer el sentido de comunidad mediante la celebración mensual de los cumpleaños.",
+      metodo: "Una vez al mes se celebran los cumpleaños del período con canciones, mensajes, una oración opcional y una merienda compartida.",
+      detalle: "Celebrar la vida es un gesto de alegría y gratitud. Una vez al mes se celebra a los integrantes que cumplen años en ese período, con canciones, mensajes, una oración opcional y una merienda compartida. El coordinador puede preparar un pequeño reconocimiento para cada cumpleañero y agradecer su presencia en el club. La actividad fortalece el sentido de pertenencia, la alegría y la acción de gracias, y permite que todos se sientan valorados. Es uno de los momentos más esperados por el grupo y contribuye a crear lazos afectivos duraderos.",
+      pasos: [
+        "Llevar un registro de los cumpleaños del mes.",
+        "Preparar un pequeño reconocimiento o tarjeta para cada cumpleañero.",
+        "Organizar una merienda sencilla con aportes voluntarios.",
+        "Cantar el cumpleaños feliz y dar mensajes de cariño.",
+        "Incluir, si el grupo lo desea, una breve oración de acción de gracias.",
+        "Cerrar agradeciendo la vida de cada cumpleañero y la compañía de todos."
+      ],
+      materiales: "Cartulina, música y alimentos aportados voluntariamente."
+    },
+    /* ============ 4. DESARROLLO PERSONAL (45–54) ============ */
+    {
+      id: 45, cat: "desarrollo",
+      titulo: "Mi historia de vida",
+      icono: "📔",
+      objetivo: "Reconocer y valorar la propia trayectoria de vida, fortaleciendo la identidad y la autoestima.",
+      metodo: "Cada participante relata los momentos más importantes de su vida: infancia, trabajo, familia, logros, aprendizajes y experiencias. Se puede dividir en varias sesiones.",
+      detalle: "Cada vida es una historia rica en experiencias, aprendizajes y momentos significativos. En esta actividad, cada participante relata los momentos más importantes de su vida: infancia, trabajo, familia, logros, dificultades superadas y aprendizajes. Se puede dividir en varias sesiones para no cansar y permitir una escucha profunda. El coordinador debe crear un clima de respeto absoluto, donde cada relato se reciba con interés y gratitud. La actividad fortalece la identidad, la autoestima y el sentido de pertenencia, y permite que los integrantes se conozcan mejor y se valoren mutuamente.",
+      pasos: [
+        "Anunciar la actividad con anticipación y explicar que se hará en varias sesiones.",
+        "Preparar un espacio tranquilo y cómodo para la escucha.",
+        "Invitar a cada participante a contar los momentos clave de su vida.",
+        "Escuchar con respeto, sin interrumpir, y hacer preguntas amables al final.",
+        "Anotar, si el participante lo autoriza, algunos datos para un cuaderno del club.",
+        "Cerrar agradeciendo cada historia y recordando la próxima sesión."
+      ],
+      materiales: "Cuaderno, lápices y fotografías opcionales."
+    },
+    {
+      id: 46, cat: "desarrollo",
+      titulo: "Descubriendo mis talentos",
+      icono: "💡",
+      objetivo: "Identificar y valorar las habilidades personales, fortaleciendo la autoestima y el sentido de utilidad.",
+      metodo: "Se realiza una conversación para identificar habilidades que cada integrante posee: reparación, costura, jardinería, cocina, música, enseñanza, organización o artesanía. Se crea un registro de talentos del club.",
+      detalle: "Muchas veces no somos conscientes de los talentos que tenemos. En esta actividad, el coordinador guía una conversación amable para que cada integrante identifique sus habilidades: reparación, costura, jardinería, cocina, música, enseñanza, organización, artesanía, etc. Se crea un registro de talentos del club, que luego puede usarse para organizar talleres donde los propios integrantes enseñen a los demás. La actividad fortalece la autoestima, el sentido de utilidad y la cohesión grupal, y permite que los integrantes se sientan valorados por lo que saben hacer.",
+      pasos: [
+        "Explicar la dinámica y dar ejemplos de talentos posibles.",
+        "Invitar a cada participante a pensar y compartir sus habilidades.",
+        "Anotar en un cuaderno o pizarra los talentos mencionados.",
+        "Conversar sobre cómo esos talentos pueden usarse en el club.",
+        "Proponer que algunos integrantes enseñen sus talentos en próximas sesiones.",
+        "Cerrar agradeciendo y celebrando la diversidad de talentos del grupo."
+      ],
+      materiales: "Papel y lápices."
+    },
+    {
+      id: 47, cat: "desarrollo",
+      titulo: "Mi mejor consejo",
+      icono: "🗣️",
+      objetivo: "Reconocer la sabiduría de la experiencia y transmitir enseñanzas valiosas a las nuevas generaciones.",
+      metodo: "Cada integrante comparte un consejo de vida que considera importante para las nuevas generaciones. Se recopilan en un mural o cuaderno.",
+      detalle: "La experiencia de vida otorga una sabiduría que merece ser compartida. En esta actividad, cada integrante comparte un consejo de vida que considera importante para las nuevas generaciones: sobre el amor, el trabajo, la familia, la amistad, la salud o la fe. El coordinador recopila los consejos en un mural o cuaderno, que se convierte en un valioso legado del club. La actividad fortalece la autoestima, el sentido de trascendencia y el reconocimiento de la experiencia, y permite que los participantes se sientan escuchados y valorados.",
+      pasos: [
+        "Anunciar la actividad con anticipación para que los participantes piensen su consejo.",
+        "Disponer un mural o cuaderno para recopilar los consejos.",
+        "Invitar a cada participante a compartir su consejo.",
+        "Anotar los consejos con las palabras del propio participante.",
+        "Conversar sobre el valor de transmitir la experiencia.",
+        "Cerrar leyendo algunos consejos en voz alta y agradeciendo la participación."
+      ],
+      materiales: "Cartulina y marcadores."
+    },
+    {
+      id: 48, cat: "desarrollo",
+      titulo: "Taller de autoestima y valoración personal",
+      icono: "💖",
+      objetivo: "Fortalecer la autoestima y el autoconcepto mediante la reflexión sobre las propias cualidades y logros.",
+      metodo: "Se proponen preguntas como: ¿Qué me hace una persona valiosa? ¿Qué cosas he logrado? ¿Qué cualidades tengo? Los participantes comparten voluntariamente.",
+      detalle: "La autoestima es un pilar fundamental del bienestar. En este taller, el coordinador propone preguntas que invitan a la reflexión personal: ¿Qué me hace una persona valiosa? ¿Qué cosas he logrado en mi vida? ¿Qué cualidades tengo? ¿Qué me gusta de mí? Los participantes comparten voluntariamente sus reflexiones, en un clima de respeto y contención. La actividad fortalece la autoestima, el autoconcepto y el bienestar emocional, y permite que los integrantes se reconozcan valiosos y se sientan acompañados en su proceso personal.",
+      pasos: [
+        "Preparar tarjetas con preguntas de reflexión sobre la autoestima.",
+        "Explicar la dinámica y aclarar que la participación es voluntaria.",
+        "Leer una pregunta y dar tiempo para la reflexión personal.",
+        "Invitar a quienes deseen compartir sus respuestas.",
+        "Escuchar con respeto y sin juzgar.",
+        "Cerrar agradeciendo y recordando la importancia de valorarse cada día."
+      ],
+      materiales: "Tarjetas con preguntas."
+    },
+    {
+      id: 49, cat: "desarrollo",
+      titulo: "Aprendiendo algo nuevo",
+      icono: "🧑‍🏫",
+      objetivo: "Favorecer el aprendizaje continuo y el intercambio de saberes entre los integrantes del club.",
+      metodo: "Cada semana un integrante enseña algo que conoce. Puede ser un truco doméstico, una reparación sencilla, un juego, una habilidad artesanal o una receta.",
+      detalle: "Aprender no tiene edad. En esta actividad, cada semana un integrante enseña algo que sabe hacer: un truco doméstico, una reparación sencilla, un juego, una habilidad artesanal, una receta, un canto, etc. El coordinador organiza con anticipación quién será el 'maestro' de la semana y prepara el espacio para la enseñanza. La actividad favorece el aprendizaje continuo, el intercambio de saberes y el reconocimiento mutuo, y permite que los integrantes se sientan útiles y valorados. Además, fortalece la cohesión del grupo y la sensación de que siempre hay algo nuevo por aprender.",
+      pasos: [
+        "Identificar, con el registro de talentos, quién puede enseñar algo.",
+        "Coordinar con anticipación la sesión y los materiales necesarios.",
+        "Presentar al 'maestro' de la semana y explicar el tema.",
+        "Invitar a todos a participar y a hacer preguntas.",
+        "Realizar la práctica junto con los participantes.",
+        "Cerrar agradeciendo al maestro y anunciando la próxima sesión."
+      ],
+      materiales: "Los que requiera la enseñanza."
+    },
+    {
+      id: 50, cat: "desarrollo",
+      titulo: "Taller de uso del teléfono celular",
+      icono: "📱",
+      objetivo: "Fortalecer la autonomía digital y la comunicación con familiares mediante el uso básico del teléfono celular.",
+      metodo: "Se enseña a utilizar WhatsApp, enviar fotografías, realizar videollamadas, escuchar música, tomar fotografías o identificar mensajes sospechosos.",
+      detalle: "El teléfono celular es una herramienta fundamental para mantenerse comunicado, pero puede resultar desafiante para algunos integrantes. En este taller, el coordinador enseña de forma sencilla y paciente: cómo usar WhatsApp, enviar fotografías, hacer videollamadas, escuchar música, tomar fotos, identificar mensajes sospechosos y evitar estafas. La actividad fortalece la autonomía digital, la comunicación con familiares y la seguridad en el uso de la tecnología. Se recomienda hacerlo en grupos pequeños y con práctica guiada, respetando el ritmo de cada persona.",
+      pasos: [
+        "Detectar las necesidades del grupo en cuanto al uso del celular.",
+        "Preparar una guía sencilla con los pasos básicos a enseñar.",
+        "Explicar cada función con paciencia y ejemplos prácticos.",
+        "Acompañar a cada participante en la práctica de lo aprendido.",
+        "Enseñar a identificar mensajes sospechosos y evitar estafas.",
+        "Cerrar recordando la importancia de la seguridad y ofreciendo apoyo continuo."
+      ],
+      materiales: "Teléfonos celulares de los participantes."
+    },
+    {
+      id: 51, cat: "desarrollo",
+      titulo: "Club de lectura",
+      icono: "📚",
+      objetivo: "Fomentar el hábito de la lectura y el pensamiento reflexivo mediante la lectura compartida y el comentario de textos.",
+      metodo: "Se lee un cuento, una reflexión, un capítulo breve o un texto espiritual. Luego se comentan las ideas principales.",
+      detalle: "La lectura compartida es una actividad muy enriquecedora. En este club de lectura, el coordinador elige un cuento, una reflexión, un capítulo breve o un texto espiritual, y lo lee en voz alta o invita a leer a distintos participantes. Después, se comentan las ideas principales, los personajes, los valores y las emociones que despertó. La actividad fomenta el hábito de la lectura, el pensamiento reflexivo y la expresión oral, y permite que los integrantes compartan interpretaciones y experiencias. Se pueden utilizar textos breves y adecuados al grupo, impresos o digitales.",
+      pasos: [
+        "Seleccionar con anticipación un texto breve y adecuado al grupo.",
+        "Preparar copias impresas o proyectar el texto.",
+        "Leer en voz alta o invitar a distintos participantes a leer.",
+        "Comentar juntos las ideas principales y los valores del texto.",
+        "Invitar a quienes deseen compartir reflexiones o experiencias.",
+        "Cerrar agradeciendo y anunciando la próxima lectura."
+      ],
+      materiales: "Libros prestados, hojas impresas o textos digitales."
+    },
+    {
+      id: 52, cat: "desarrollo",
+      titulo: "Conversatorio: jubilación con propósito",
+      icono: "☕",
+      objetivo: "Reflexionar sobre el sentido de la jubilación y las posibilidades de crecimiento personal en esta etapa de la vida.",
+      metodo: "Se conversa sobre cómo aprovechar el tiempo libre, mantener amistades, descubrir nuevas aficiones y sentirse útiles en esta etapa de la vida.",
+      detalle: "La jubilación es una etapa que trae cambios y nuevas oportunidades. En este conversatorio, el coordinador guía una reflexión sobre cómo aprovechar el tiempo libre, mantener amistades, descubrir nuevas aficiones, cuidar la salud y sentirse útiles en esta etapa de la vida. Se puede conversar en pequeños grupos o en plenaria, con preguntas orientadoras que inviten a compartir experiencias y expectativas. La actividad fortalece el bienestar emocional, el sentido de propósito y la cohesión grupal, y permite que los integrantes se sientan acompañados en esta etapa de sus vidas.",
+      pasos: [
+        "Preparar preguntas orientadoras sobre la jubilación y el tiempo libre.",
+        "Explicar la dinámica y crear un clima de confianza.",
+        "Invitar a los participantes a compartir sus experiencias y expectativas.",
+        "Anotar las ideas principales en una pizarra o cuaderno.",
+        "Conversar sobre cómo el club puede acompañar esos propósitos.",
+        "Cerrar agradeciendo la participación y proponiendo acciones concretas."
+      ],
+      materiales: "Preguntas preparadas en tarjetas."
+    },
+    {
+      id: 53, cat: "desarrollo",
+      titulo: "Taller de comunicación y convivencia",
+      icono: "🤝",
+      objetivo: "Fortalecer las habilidades de comunicación y la resolución pacífica de conflictos en la convivencia diaria.",
+      metodo: "Se presentan situaciones comunes entre vecinos y se reflexiona sobre cómo resolver desacuerdos con respeto, escucha y diálogo.",
+      detalle: "La convivencia diaria requiere habilidades de comunicación y empatía. En este taller, el coordinador presenta situaciones comunes entre vecinos: ruidos, uso de espacios comunes, diferencias de opinión, malentendidos. A partir de cada situación, el grupo reflexiona sobre cómo resolver los desacuerdos con respeto, escucha y diálogo, buscando soluciones que beneficien a todos. La actividad fortalece las habilidades de comunicación, la empatía y la resolución pacífica de conflictos, y permite que los integrantes se sientan más preparados para convivir en armonía.",
+      pasos: [
+        "Preparar tarjetas con situaciones comunes de convivencia.",
+        "Explicar la dinámica y crear un clima de respeto.",
+        "Leer una situación y abrir la reflexión grupal.",
+        "Animar a proponer soluciones y a escuchar distintas opiniones.",
+        "Conversar sobre la importancia de la escucha y el respeto.",
+        "Cerrar con compromisos sencillos para mejorar la convivencia."
+      ],
+      materiales: "Tarjetas con situaciones hipotéticas."
+    },
+    {
+      id: 54, cat: "desarrollo",
+      titulo: "Mi proyecto personal",
+      icono: "🎯",
+      objetivo: "Fortalecer el sentido de propósito y la motivación personal mediante la definición de una pequeña meta.",
+      metodo: "Cada persona identifica una pequeña meta que desea cumplir en el próximo mes: aprender una canción, terminar una manualidad, leer un libro, llamar a un familiar o enseñar algo al club.",
+      detalle: "Tener metas, aunque sean pequeñas, da sentido y motivación a la vida. En esta actividad, cada persona identifica una pequeña meta que desea cumplir en el próximo mes: aprender una canción, terminar una manualidad, leer un libro, llamar a un familiar, enseñar algo al club, etc. El coordinador acompaña la definición de la meta, ayudando a que sea realista y alcanzable. En la siguiente reunión se revisan los avances. La actividad fortalece el sentido de propósito, la motivación y la autoestima, y permite que los integrantes se sientan protagonistas de su propio crecimiento.",
+      pasos: [
+        "Explicar la actividad y dar ejemplos de metas pequeñas y alcanzables.",
+        "Entregar una hoja a cada participante para escribir su meta.",
+        "Acompañar individualmente a quien lo necesite para definirla bien.",
+        "Invitar a quien desee compartir su meta con el grupo.",
+        "Acordar revisar los avances en la próxima reunión.",
+        "Cerrar con un aplauso colectivo y un mensaje de ánimo."
+      ],
+      materiales: "Hojas y lápices."
+    },
+    /* ============ 5. ARTÍSTICAS (55–66) ============ */
+    {
+      id: 55, cat: "artisticas",
+      titulo: "Taller de tarjetas de felicitación",
+      icono: "💌",
+      objetivo: "Favorecer la expresión artística y el vínculo afectivo mediante la elaboración de tarjetas personalizadas.",
+      metodo: "Se elaboran tarjetas para cumpleaños, Navidad, Día de las Madres, Día de los Padres o mensajes de amistad.",
+      detalle: "Elaborar una tarjeta con las propias manos es un gesto de cariño muy significativo. En este taller, los participantes elaboran tarjetas para distintas ocasiones: cumpleaños, Navidad, Día de las Madres, Día de los Padres o mensajes de amistad. Se utilizan materiales reciclados y se fomenta la creatividad de cada uno. Al final, las tarjetas pueden entregarse a un ser querido, a un compañero del club o a una persona que necesite un mensaje de aliento. La actividad favorece la expresión artística, el vínculo afectivo y la autoestima, y permite que los integrantes se lleven a casa algo hecho por ellos mismos.",
+      pasos: [
+        "Reunir con anticipación los materiales: cartón, revistas, tijeras, pegamento, lápices.",
+        "Explicar la dinámica y mostrar algunos ejemplos de tarjetas.",
+        "Entregar los materiales a cada participante.",
+        "Acompañar la elaboración, respetando el estilo de cada uno.",
+        "Invitar a escribir un mensaje significativo en la tarjeta.",
+        "Cerrar compartiendo las tarjetas y comentando a quién se la van a regalar."
+      ],
+      materiales: "Cartón usado, revistas, tijeras de punta segura, pegamento, lápices."
+    },
+    {
+      id: 56, cat: "artisticas",
+      titulo: "Pintura y dibujo libre",
+      icono: "🖌️",
+      objetivo: "Favorecer la expresión artística y el bienestar emocional mediante la pintura y el dibujo libre.",
+      metodo: "Los participantes dibujan paisajes, flores, recuerdos o imágenes religiosas. No se evalúa la calidad artística.",
+      detalle: "El arte es una forma de expresión y bienestar. En esta actividad, los participantes dibujan o pintan libremente lo que deseen: paisajes, flores, recuerdos, imágenes religiosas o cualquier cosa que les inspire. No se evalúa la calidad artística; lo importante es disfrutar del proceso, compartir y expresar emociones. El coordinador puede acompañar con música suave y ofrecer materiales variados. Al final, se pueden compartir las creaciones y, si se desea, montar una pequeña exposición. La actividad favorece la expresión artística, la relajación y el bienestar emocional.",
+      pasos: [
+        "Preparar los materiales: hojas, lápices, colores, pinturas.",
+        "Crear un ambiente tranquilo, con música suave si es posible.",
+        "Explicar que no se evalúa la calidad, solo se disfruta el proceso.",
+        "Acompañar a quienes necesiten una idea para empezar.",
+        "Invitar a compartir las creaciones al final.",
+        "Cerrar agradeciendo y, si se desea, montar una pequeña exposición."
+      ],
+      materiales: "Hojas recicladas, lápices, colores o pinturas económicas."
+    },
+    {
+      id: 57, cat: "artisticas",
+      titulo: "Flores de papel",
+      icono: "🌷",
+      objetivo: "Favorecer la creatividad y la motricidad fina mediante la elaboración de flores decorativas.",
+      metodo: "Se confeccionan flores decorativas utilizando papel reciclado o papel de colores.",
+      detalle: "Las flores de papel son una actividad creativa y muy gratificante. Los participantes elaboran flores decorativas con papel reciclado o papel de colores, siguiendo instrucciones sencillas. Se pueden usar para decorar el espacio del club, regalar a un ser querido o llevar a casa. La actividad favorece la creatividad, la motricidad fina y la autoestima, y permite que los integrantes se lleven algo hecho por ellos mismos. El coordinador debe acompañar con paciencia y recordar que cada flor es única, como cada persona.",
+      pasos: [
+        "Preparar el material: papel, tijeras, pegamento y palitos reutilizados.",
+        "Mostrar un ejemplo de flor terminada y explicar los pasos.",
+        "Entregar los materiales y acompañar la elaboración.",
+        "Animar a combinar colores y formas.",
+        "Invitar a compartir las flores al final.",
+        "Cerrar agradeciendo y proponiendo decorar el espacio del club con ellas."
+      ],
+      materiales: "Papel, tijeras, pegamento y palitos reutilizados."
+    },
+    {
+      id: 58, cat: "artisticas",
+      titulo: "Decoración de botellas y frascos",
+      icono: "🫙",
+      objetivo: "Favorecer la creatividad y el cuidado del ambiente mediante la transformación de frascos y botellas en objetos decorativos.",
+      metodo: "Se transforman frascos de vidrio o botellas en adornos, portalápices o pequeños floreros.",
+      detalle: "Esta actividad combina creatividad y cuidado del ambiente. Los participantes transforman frascos de vidrio o botellas en adornos, portalápices o pequeños floreros, utilizando retazos, papel, pegamento y otros materiales. Se deben tomar precauciones para evitar cortes y bordes filosos, y trabajar con frascos ya limpios y sin astillas. La actividad favorece la creatividad, la motricidad fina y la conciencia ambiental, y permite que los integrantes se lleven a casa un objeto decorativo hecho por ellos mismos. Es ideal para regalar o decorar el espacio del club.",
+      pasos: [
+        "Reunir frascos y botellas limpios, sin astillas ni bordes filosos.",
+        "Preparar retazos, papel, pegamento y otros materiales decorativos.",
+        "Mostrar ejemplos y explicar los pasos de la decoración.",
+        "Acompañar a cada participante en la elaboración.",
+        "Tomar precauciones con los bordes filosos.",
+        "Cerrar compartiendo las creaciones y comentando su uso."
+      ],
+      materiales: "Frascos limpios, retazos, papel, pegamento. Evitar cortes y bordes filosos."
+    },
+    {
+      id: 59, cat: "artisticas",
+      titulo: "Collage de sueños y recuerdos",
+      icono: "🖼️",
+      objetivo: "Favorecer la expresión personal y el bienestar emocional mediante la creación de un collage significativo.",
+      metodo: "Cada participante crea un collage con imágenes que representen su familia, sus sueños, sus aficiones o las cosas que le gustan.",
+      detalle: "El collage es una forma muy expresiva de comunicar quiénes somos y qué deseamos. En esta actividad, cada participante crea un collage con imágenes que representen su familia, sus sueños, sus aficiones o las cosas que le gustan. Se utilizan revistas viejas, cartón, pegamento y tijeras. El coordinador acompaña el proceso, animando a cada uno a expresarse libremente. Al final, se pueden compartir los collages y conversar sobre lo que representan. La actividad favorece la expresión personal, la creatividad y el bienestar emocional, y permite que los integrantes se conozcan mejor.",
+      pasos: [
+        "Reunir revistas viejas, cartón, pegamento y tijeras.",
+        "Explicar la dinámica y mostrar un ejemplo de collage.",
+        "Invitar a cada participante a buscar imágenes significativas.",
+        "Acompañar la creación del collage, respetando el estilo de cada uno.",
+        "Invitar a compartir y comentar los collages.",
+        "Cerrar agradeciendo y, si se desea, exponerlos en el espacio del club."
+      ],
+      materiales: "Revistas viejas, cartón, pegamento y tijeras."
+    },
+    {
+      id: 60, cat: "artisticas",
+      titulo: "Tejido y costura solidaria",
+      icono: "🧶",
+      objetivo: "Favorecer la motricidad fina y el sentido de utilidad mediante el tejido y la costura solidaria.",
+      metodo: "Quienes tengan conocimientos pueden enseñar a tejer, bordar, coser botones o reparar prendas.",
+      detalle: "El tejido y la costura son actividades muy queridas por muchas personas y, además, permiten ayudar a otros. En esta actividad, quienes tienen conocimientos enseñan a tejer, bordar, coser botones o reparar prendas a quienes desean aprender. Se puede organizar como un taller solidario: lo producido puede donarse a personas que lo necesiten o usarse para el club. La actividad favorece la motricidad fina, la autoestima y el sentido de utilidad, y permite que los integrantes compartan sus saberes y se sientan parte de un proyecto común. Es importante contar con materiales aportados por los participantes.",
+      pasos: [
+        "Identificar a quienes saben tejer o coser y a quienes quieren aprender.",
+        "Reunir agujas, hilos, lana y retazos aportados por los participantes.",
+        "Organizar el espacio para trabajar cómodamente.",
+        "Acompañar el aprendizaje con paciencia.",
+        "Definir un objetivo solidario para lo producido.",
+        "Cerrar agradeciendo y, si se desea, planificar próximos encuentros."
+      ],
+      materiales: "Agujas, hilos, lana y retazos aportados por los participantes."
+    },
+    {
+      id: 61, cat: "artisticas",
+      titulo: "Elaboración de adornos navideños",
+      icono: "🎄",
+      objetivo: "Favorecer la creatividad y el espíritu navideño mediante la elaboración de adornos con materiales reciclados.",
+      metodo: "Se confeccionan decoraciones para el club, los hogares o las áreas comunes del conjunto residencial.",
+      detalle: "La Navidad es una época muy querida y la elaboración de adornos permite compartir la alegría de la preparación. En esta actividad, los participantes confeccionan decoraciones navideñas con cartón, papel, retazos y elementos reciclados: estrellas, campanas, árboles, tarjetas, coronas. Lo producido puede decorar el club, los hogares o las áreas comunes del conjunto residencial. La actividad favorece la creatividad, el espíritu navideño y el sentido de comunidad, y permite que los integrantes se sientan parte de la preparación de una fecha especial. Se recomienda comenzar con anticipación.",
+      pasos: [
+        "Reunir con anticipación cartón, papel, retazos y elementos reciclados.",
+        "Mostrar ejemplos de adornos y explicar los pasos.",
+        "Entregar los materiales y acompañar la elaboración.",
+        "Animar a combinar colores y formas navideñas.",
+        "Invitar a compartir las creaciones y decidir dónde colocarlas.",
+        "Cerrar agradeciendo y, si se desea, ambientar el club con los adornos."
+      ],
+      materiales: "Cartón, papel, retazos y elementos reciclados."
+    },
+    {
+      id: 62, cat: "artisticas",
+      titulo: "Mural de la amistad",
+      icono: "🌻",
+      objetivo: "Fortalecer el sentido de pertenencia y la amistad mediante la creación colectiva de un mural significativo.",
+      metodo: "Se elabora un mural con mensajes positivos, fotografías autorizadas, dibujos y nombres de los integrantes.",
+      detalle: "Un mural colectivo es un símbolo de unión y amistad. En esta actividad, los integrantes elaboran un mural con mensajes positivos, fotografías autorizadas, dibujos y sus nombres. Se puede colocar en el espacio donde se reúne el club para que quede como testimonio de la comunidad. La actividad favorece la creatividad, la expresión personal y el sentido de pertenencia, y permite que los integrantes se sientan parte de algo construido entre todos. Es importante respetar la autorización de cada persona para incluir su fotografía o su nombre, y cuidar que el mural refleje el cariño del grupo.",
+      pasos: [
+        "Preparar una cartulina grande y los materiales necesarios.",
+        "Explicar la dinámica y pedir autorización para incluir fotos o nombres.",
+        "Invitar a cada participante a aportar mensajes, dibujos o fotos.",
+        "Armar el mural entre todos, en un clima de alegría.",
+        "Colocarlo en un lugar visible del espacio del club.",
+        "Cerrar con una foto grupal junto al mural y un aplauso colectivo."
+      ],
+      materiales: "Cartulina grande, papel, pegamento y marcadores."
+    },
+    {
+      id: 63, cat: "artisticas",
+      titulo: "Creación de instrumentos musicales reciclados",
+      icono: "🥁",
+      objetivo: "Favorecer la creatividad, la motricidad fina y la expresión musical mediante la construcción de instrumentos con materiales reciclados.",
+      metodo: "Se fabrican maracas con recipientes resistentes y semillas, o instrumentos de percusión sencillos. Después se acompaña una canción.",
+      detalle: "Construir nuestros propios instrumentos musicales es una experiencia muy gratificante. En esta actividad, los participantes fabrican maracas con recipientes resistentes y semillas, o instrumentos de percusión sencillos, con materiales reciclados. Después, acompañan una canción con los instrumentos creados, en un momento de alegría compartida. La actividad favorece la creatividad, la motricidad fina y la expresión musical, y permite que los integrantes se sientan protagonistas de la música. Es importante usar envases seguros y semillas adecuadas, y acompañar con paciencia el proceso.",
+      pasos: [
+        "Reunir envases seguros, semillas y cinta adhesiva.",
+        "Mostrar un ejemplo de instrumento terminado y explicar los pasos.",
+        "Acompañar la fabricación de los instrumentos.",
+        "Probar los sonidos y ajustar los materiales.",
+        "Cantar o reproducir una canción y acompañar con los instrumentos.",
+        "Cerrar con un pequeño concierto grupal y aplausos para todos."
+      ],
+      materiales: "Envases seguros, semillas, cinta adhesiva."
+    },
+    {
+      id: 64, cat: "artisticas",
+      titulo: "Taller de origami sencillo",
+      icono: "🦢",
+      objetivo: "Favorecer la concentración, la motricidad fina y la creatividad mediante el plegado de papel.",
+      metodo: "Se enseña a doblar papel para crear figuras simples, como flores, corazones o sobres.",
+      detalle: "El origami es un arte milenario que aporta calma y concentración. En este taller, los participantes aprenden a doblar papel para crear figuras simples: flores, corazones, sobres, animales. Se enseña paso a paso, con paciencia, y se invita a cada uno a practicar a su ritmo. La actividad favorece la concentración, la motricidad fina y la creatividad, y permite que los integrantes se lleven a casa una figura hecha por ellos mismos. Es ideal para momentos tranquilos y para compartir con nietos o familiares.",
+      pasos: [
+        "Preparar hojas de papel de colores y una superficie plana para doblar.",
+        "Mostrar la figura paso a paso y repetir la demostración.",
+        "Acompañar a cada participante en la práctica.",
+        "Animar a repetir la figura hasta dominarla.",
+        "Invitar a crear variaciones o figuras nuevas.",
+        "Cerrar compartiendo las creaciones y comentando la experiencia."
+      ],
+      materiales: "Hojas de papel."
+    },
+    {
+      id: 65, cat: "artisticas",
+      titulo: "Decoración del espacio del club",
+      icono: "🏡",
+      objetivo: "Fortalecer el sentido de pertenencia y el cuidado de los espacios comunes mediante la decoración colectiva del club.",
+      metodo: "Los integrantes diseñan y elaboran adornos para mejorar el ambiente del lugar donde se reúnen.",
+      detalle: "El espacio donde nos reunimos también merece cuidado y cariño. En esta actividad, los integrantes diseñan y elaboran adornos para mejorar el ambiente del lugar donde se reúnen: guirnaldas, cuadros, móviles, murales, centros de mesa. Se utilizan materiales reciclados y se fomenta la creatividad colectiva. La actividad fortalece el sentido de pertenencia, el cuidado de los espacios comunes y la autoestima, y permite que los integrantes sientan el club como propio. Se puede hacer por temporadas o por temáticas.",
+      pasos: [
+        "Conversar con el grupo sobre qué adornos les gustaría hacer.",
+        "Reunir los materiales necesarios, preferentemente reciclados.",
+        "Organizar a los participantes en pequeños grupos por tarea.",
+        "Acompañar la elaboración y distribuir el espacio.",
+        "Colocar los adornos en el espacio del club.",
+        "Cerrar agradeciendo y observando juntos el resultado."
+      ],
+      materiales: "Cartón, papel, materiales reutilizados."
+    },
+    {
+      id: 66, cat: "artisticas",
+      titulo: "Exposición de artes y oficios",
+      icono: "🏛️",
+      objetivo: "Reconocer y valorar las creaciones de los integrantes mediante una exposición colectiva.",
+      metodo: "Se organiza una pequeña exposición para mostrar manualidades, pinturas, tejidos o trabajos realizados por los integrantes.",
+      detalle: "Mostrar lo que hacemos es una forma de valorar nuestro trabajo y compartirlo con los demás. En esta actividad, se organiza una pequeña exposición con las manualidades, pinturas, tejidos o trabajos realizados por los integrantes a lo largo del año. Se invita a familiares y amigos, y se prepara un espacio con mesas, carteles y las obras. La actividad fortalece la autoestima, el reconocimiento mutuo y el sentido de comunidad, y permite que los integrantes se sientan orgullosos de sus creaciones. Es una ocasión ideal para celebrar el talento del grupo.",
+      pasos: [
+        "Reunir con anticipación los trabajos realizados por los integrantes.",
+        "Preparar el espacio con mesas, carteles y una breve reseña de cada obra.",
+        "Invitar a familiares, amigos y vecinos a la exposición.",
+        "Recibir a los visitantes con alegría y acompañar el recorrido.",
+        "Agradecer públicamente a cada participante por su aporte.",
+        "Cerrar con un pequeño compartir y una foto grupal."
+      ],
+      materiales: "Mesas, carteles y los trabajos elaborados."
+    },
+    /* ============ 6. MOVIMIENTO (67–76) ============ */
+    {
+      id: 67, cat: "movimiento",
+      titulo: "Gimnasia recreativa en silla",
+      icono: "🪑",
+      objetivo: "Favorecer la movilidad y el bienestar físico mediante ejercicios suaves adaptados a la silla.",
+      metodo: "Se realizan movimientos suaves de brazos, hombros, manos, tobillos y piernas, permaneciendo sentados. Cada persona se mueve hasta donde le resulte cómodo.",
+      detalle: "La gimnasia en silla es una excelente forma de mantener la movilidad y el bienestar físico sin riesgos. En esta actividad, los participantes realizan movimientos suaves de brazos, hombros, manos, tobillos y piernas, permaneciendo sentados. Cada persona se mueve hasta donde le resulte cómodo, sin exigencias. El coordinador guía los ejercicios con voz calmada y puede acompañar con música suave. La actividad favorece la circulación, la flexibilidad y el bienestar general, y permite que todos participen según sus posibilidades. Es importante consultar previamente si alguien tiene limitaciones.",
+      pasos: [
+        "Preparar sillas firmes y un espacio despejado.",
+        "Consultar previamente si alguien tiene limitaciones físicas.",
+        "Explicar la dinámica y recordar que cada uno se mueve a su ritmo.",
+        "Guiar los movimientos suaves, uno por uno, con calma.",
+        "Acompañar con música suave si se desea.",
+        "Cerrar con estiramientos suaves y una respiración profunda."
+      ],
+      materiales: "Sillas firmes y música opcional."
+    },
+    {
+      id: 68, cat: "movimiento",
+      titulo: "Bailoterapia de bajo impacto",
+      icono: "💃",
+      objetivo: "Favorecer el movimiento, la alegría y el bienestar emocional mediante el baile adaptado.",
+      metodo: "Se seleccionan canciones alegres y se realizan movimientos sencillos. Se puede bailar sentado o de pie con apoyo.",
+      detalle: "La bailoterapia es una actividad muy alegre y beneficiosa. En esta versión de bajo impacto, se seleccionan canciones alegres y se realizan movimientos sencillos, adaptados a las posibilidades de cada uno. Se puede bailar sentado o de pie con apoyo, y nadie está obligado a moverse más de lo que le resulte cómodo. El coordinador guía los movimientos con entusiasmo y respeto. La actividad favorece el movimiento, la coordinación, la alegría y el bienestar emocional, y permite que los integrantes se diviertan juntos. Es importante cuidar el equilibrio y ofrecer apoyo a quien lo necesite.",
+      pasos: [
+        "Preparar una lista de canciones alegres y conocidas.",
+        "Disponer sillas alrededor por si alguien necesita apoyo.",
+        "Explicar la dinámica y recordar que cada uno baila a su ritmo.",
+        "Guiar los movimientos sencillos con entusiasmo.",
+        "Ofrecer apoyo a quien lo necesite y respetar los límites de cada uno.",
+        "Cerrar con una canción suave para relajarse y aplaudir juntos."
+      ],
+      materiales: "Celular, parlante y sillas."
+    },
+    {
+      id: 69, cat: "movimiento",
+      titulo: "Caminata de convivencia",
+      icono: "🚶",
+      objetivo: "Favorecer el movimiento al aire libre y la convivencia mediante una caminata corta y segura.",
+      metodo: "Se organiza una caminata corta por áreas seguras del conjunto residencial, con descansos y acompañamiento.",
+      detalle: "Caminar al aire libre es una de las actividades más beneficiosas para la salud física y emocional. En esta actividad, se organiza una caminata corta por áreas seguras del conjunto residencial, con descansos y acompañamiento. Se debe verificar el estado del tiempo, llevar agua y calzado adecuado, y contar con el apoyo de acompañantes. La actividad favorece el movimiento, la circulación y el bienestar general, y permite que los integrantes conversen y compartan mientras caminan. Es importante respetar el ritmo de cada persona y prever un lugar para descansar.",
+      pasos: [
+        "Elegir un recorrido corto y seguro dentro del conjunto residencial.",
+        "Verificar el estado del tiempo y prever agua y calzado adecuado.",
+        "Organizar acompañantes para quienes lo necesiten.",
+        "Realizar la caminata a paso suave, con descansos.",
+        "Aprovechar para conversar y disfrutar del entorno.",
+        "Cerrar con un breve estiramiento y un compartir."
+      ],
+      materiales: "Agua, calzado adecuado y apoyo de acompañantes."
+    },
+    {
+      id: 70, cat: "movimiento",
+      titulo: "La pelota viajera",
+      icono: "⚽",
+      objetivo: "Favorecer la coordinación, la memoria y la convivencia mediante el intercambio de una pelota en círculo.",
+      metodo: "Sentados en círculo, los participantes se pasan una pelota suave. Al recibirla, cada persona puede decir su nombre, una palabra positiva o responder una pregunta sencilla.",
+      detalle: "La pelota viajera es una actividad sencilla que combina movimiento y conversación. Los participantes se sientan en círculo y se pasan una pelota suave. Al recibirla, cada persona puede decir su nombre, una palabra positiva o responder una pregunta sencilla que propone el coordinador. La actividad favorece la coordinación, la memoria y la convivencia, y permite que los integrantes se conozcan mejor y se sientan parte del grupo. Es ideal para comenzar una reunión o para integrar a nuevos miembros. Se puede adaptar según las posibilidades de cada uno.",
+      pasos: [
+        "Formar un círculo con sillas y tener una pelota suave a mano.",
+        "Explicar la dinámica y dar un ejemplo.",
+        "Comenzar pasando la pelota al primero, que responderá.",
+        "Continuar pasando la pelota, respetando el ritmo de cada uno.",
+        "Variar las preguntas para mantener el interés.",
+        "Cerrar con un aplauso y un mensaje positivo grupal."
+      ],
+      materiales: "Pelota ligera."
+    },
+    {
+      id: 71, cat: "movimiento",
+      titulo: "Coordinación con las manos",
+      icono: "👏",
+      objetivo: "Favorecer la coordinación motriz y la atención mediante movimientos rítmicos con las manos.",
+      metodo: "Se realizan movimientos sencillos al ritmo de la música: palmadas suaves, levantar una mano, tocar los dedos o seguir secuencias.",
+      detalle: "La coordinación con las manos es una actividad sencilla que aporta múltiples beneficios. Al ritmo de una música suave, los participantes realizan movimientos sencillos: palmadas, levantar una mano, tocar los dedos, seguir secuencias. El coordinador guía los movimientos y anima a todos a participar a su ritmo. La actividad favorece la coordinación motriz, la atención y la memoria de trabajo, y permite que los integrantes se diviertan juntos. Es ideal para combinar con música y para hacerla en grupo, fortaleciendo también la convivencia.",
+      pasos: [
+        "Preparar música suave y un espacio cómodo.",
+        "Explicar los movimientos básicos con un ejemplo.",
+        "Comenzar con movimientos lentos y sencillos.",
+        "Aumentar gradualmente la complejidad, si el grupo lo disfruta.",
+        "Animar a todos a participar a su ritmo.",
+        "Cerrar con una respiración profunda y un aplauso colectivo."
+      ],
+      materiales: "Música opcional."
+    },
+    {
+      id: 72, cat: "movimiento",
+      titulo: "Yoga o estiramientos adaptados",
+      icono: "🧘‍♀️",
+      objetivo: "Favorecer la flexibilidad, la relajación y el bienestar físico mediante estiramientos suaves adaptados.",
+      metodo: "Se realizan estiramientos suaves, principalmente sentados, dirigidos por alguien con conocimientos adecuados para adultos mayores.",
+      detalle: "El yoga y los estiramientos adaptados son una excelente manera de mantener la flexibilidad y el bienestar. En esta actividad, se realizan estiramientos suaves, principalmente sentados, dirigidos por alguien con conocimientos adecuados para adultos mayores. Se trabaja la respiración, la postura y la relajación, siempre respetando los límites de cada persona. La actividad favorece la flexibilidad, la relajación y el bienestar físico y emocional, y permite que los integrantes se sientan mejor consigo mismos. Es importante consultar previamente y evitar movimientos que produzcan dolor.",
+      pasos: [
+        "Preparar sillas y un espacio despejado y tranquilo.",
+        "Consultar previamente si alguien tiene limitaciones físicas.",
+        "Explicar la dinámica y recordar que cada uno se mueve a su ritmo.",
+        "Guiar los estiramientos suaves, uno por uno.",
+        "Acompañar con respiraciones profundas.",
+        "Cerrar con una relajación breve y un momento de silencio."
+      ],
+      materiales: "Sillas y espacio despejado."
+    },
+    {
+      id: 73, cat: "movimiento",
+      titulo: "Relajación con música",
+      icono: "🎧",
+      objetivo: "Favorecer la relajación y el bienestar emocional mediante la audición de música tranquila.",
+      metodo: "Se escucha música instrumental o sonidos de naturaleza durante unos minutos. Se invita a respirar suavemente y descansar.",
+      detalle: "La música tiene un efecto calmante y reparador. En esta actividad, los participantes escuchan música instrumental o sonidos de naturaleza durante unos minutos, sentados cómodamente. Se invita a respirar suavemente, cerrar los ojos y descansar. El coordinador puede guiar una breve relajación con voz calmada. La actividad favorece la relajación, la reducción del estrés y el bienestar emocional, y permite que los integrantes se sientan en paz. Es ideal para cerrar una reunión o para un momento de descanso.",
+      pasos: [
+        "Preparar un espacio tranquilo y sillas cómodas.",
+        "Elegir música instrumental o sonidos de naturaleza.",
+        "Explicar la dinámica e invitar a sentarse cómodamente.",
+        "Reproducir la música y guiar una respiración suave.",
+        "Permitir unos minutos de silencio y descanso.",
+        "Cerrar invitando a abrir los ojos lentamente y compartir cómo se sienten."
+      ],
+      materiales: "Celular, parlante."
+    },
+    {
+      id: 74, cat: "movimiento",
+      titulo: "Juegos de lanzamiento",
+      icono: "🎯",
+      objetivo: "Favorecer la coordinación, la motricidad y la convivencia mediante juegos de lanzamiento adaptados.",
+      metodo: "Se lanzan saquitos de tela rellenos de arroz o una pelota suave hacia un recipiente colocado a corta distancia. Puede hacerse sentado.",
+      detalle: "Los juegos de lanzamiento son una forma divertida de ejercitar la coordinación y la motricidad. En esta actividad, los participantes lanzan saquitos de tela rellenos de arroz o una pelota suave hacia un recipiente colocado a corta distancia. Puede hacerse sentado, adaptando la distancia a las posibilidades de cada uno. La actividad favorece la coordinación, la motricidad y la convivencia, y permite que los integrantes se diviertan juntos. Es importante no generar competencia estresante y celebrar cada intento con alegría.",
+      pasos: [
+        "Preparar saquitos de tela o pelotas suaves y recipientes.",
+        "Marcar distancias cortas y adaptadas a las posibilidades del grupo.",
+        "Explicar la dinámica y dar un ejemplo.",
+        "Invitar a cada participante a lanzar, sin presión.",
+        "Celebrar cada intento con aplausos y ánimo.",
+        "Cerrar con un juego grupal y un mensaje positivo."
+      ],
+      materiales: "Saquitos, recipientes y cinta para marcar distancias."
+    },
+    {
+      id: 75, cat: "movimiento",
+      titulo: "Circuito recreativo sencillo",
+      icono: "🔁",
+      objetivo: "Favorecer la movilidad, la coordinación y la convivencia mediante un circuito de estaciones adaptadas.",
+      metodo: "Se organizan estaciones adaptadas: lanzar una pelota, encestar, mover objetos livianos, identificar imágenes o realizar movimientos suaves.",
+      detalle: "El circuito recreativo es una actividad muy completa. Se organizan varias estaciones adaptadas: lanzar una pelota, encestar, mover objetos livianos, identificar imágenes, realizar movimientos suaves. Los participantes recorren las estaciones a su ritmo, con acompañamiento. La actividad favorece la movilidad, la coordinación, la memoria y la convivencia, y permite que los integrantes se diviertan mientras ejercitan distintas habilidades. Es importante adaptar cada estación a las posibilidades del grupo y ofrecer apoyo donde se necesite. Se puede hacer por turnos o en pequeños grupos.",
+      pasos: [
+        "Diseñar el circuito con 3 o 4 estaciones adaptadas.",
+        "Preparar los materiales y ubicar las estaciones en el espacio.",
+        "Explicar cada estación y dar un ejemplo.",
+        "Organizar turnos o pequeños grupos para recorrer el circuito.",
+        "Acompañar y apoyar a quien lo necesite.",
+        "Cerrar celebrando la participación de todos y comentando qué estación les gustó más."
+      ],
+      materiales: "Pelotas, cajas, objetos livianos y sillas."
+    },
+    {
+      id: 76, cat: "movimiento",
+      titulo: "El baile de los recuerdos",
+      icono: "🕺",
+      objetivo: "Favorecer el movimiento, la memoria y el bienestar emocional mediante el baile de músicas de otras épocas.",
+      metodo: "Se reproduce música de épocas conocidas. Los asistentes pueden recordar bailes de su juventud y realizar movimientos sentados o de pie según sus capacidades.",
+      detalle: "La música y el baile despiertan recuerdos y emociones. En esta actividad, se reproduce música de distintas épocas (años 50, 60, 70, 80) y los participantes recuerdan los bailes de su juventud. Pueden bailar sentados, de pie con apoyo, o simplemente escuchar y recordar. El coordinador guía con entusiasmo y respeto, y anima a compartir anécdotas. La actividad favorece el movimiento, la memoria y el bienestar emocional, y permite que los integrantes disfruten de la música y la compañía. Es importante respetar el ritmo de cada uno y ofrecer apoyo a quien lo necesite.",
+      pasos: [
+        "Preparar música de distintas épocas conocidas por el grupo.",
+        "Disponer sillas alrededor para quienes deseen bailar sentados.",
+        "Explicar la dinámica y recordar que cada uno baila a su ritmo.",
+        "Reproducir la música y animar a recordar los bailes de la juventud.",
+        "Compartir anécdotas asociadas a las canciones.",
+        "Cerrar con una canción suave y un aplauso colectivo."
+      ],
+      materiales: "Música y parlante."
+    }
+  ];
+
+  /* =========================================================
+     LÓGICA
+     ========================================================= */
+  const state = { filter: 'all', search: '', currentActivity: null };
+
+  function renderGrid() {
+    const grid = document.getElementById('catalogGrid');
+    const term = state.search.trim().toLowerCase();
+
+    const filtradas = ACTIVIDADES.filter(a => {
+      const matchCat = state.filter === 'all' || a.cat === state.filter;
+      const matchTxt = !term ||
+        a.titulo.toLowerCase().includes(term) ||
+        (a.metodo || '').toLowerCase().includes(term);
+      return matchCat && matchTxt;
+    });
+
+    if (filtradas.length === 0) {
+      grid.innerHTML = `<p class="empty-state">No se encontraron actividades con esos criterios.</p>`;
+      return;
+    }
+
+    grid.innerHTML = filtradas.map(a => `
+      <article class="activity-card" data-id="${a.id}" tabindex="0" role="button"
+               aria-label="Ver actividad ${a.titulo}">
+        <div class="activity-thumb">${a.icono}</div>
+        <div class="activity-body">
+          <span class="activity-cat">${CATEGORIAS[a.cat].emoji} ${CATEGORIAS[a.cat].nombre}</span>
+          <h3 class="activity-title">${a.titulo}</h3>
+          <span class="activity-num">Actividad #${a.id}</span>
+        </div>
+      </article>
+    `).join('');
+
+    grid.querySelectorAll('.activity-card').forEach(card => {
+      card.addEventListener('click', () => openModal(Number(card.dataset.id)));
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openModal(Number(card.dataset.id));
+        }
+      });
+    });
+  }
+
+  document.getElementById('filters').addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    state.filter = chip.dataset.filter;
+    renderGrid();
+  });
+
+  document.getElementById('searchInput').addEventListener('input', e => {
+    state.search = e.target.value;
+    renderGrid();
+  });
+
+  const backdrop = document.getElementById('modalBackdrop');
+
+  function openModal(id) {
+    const a = ACTIVIDADES.find(x => x.id === id);
+    if (!a) return;
+    state.currentActivity = a;
+
+    document.getElementById('modalCat').textContent =
+      `${CATEGORIAS[a.cat].emoji} ${CATEGORIAS[a.cat].nombre}`;
+    document.getElementById('modalTitle').textContent = a.titulo;
+
+    const secObj = document.getElementById('secObjetivo');
+    if (a.objetivo) {
+      secObj.style.display = '';
+      document.getElementById('modalObjetivo').textContent = a.objetivo;
+    } else {
+      secObj.style.display = 'none';
+    }
+
+    document.getElementById('modalDetalle').textContent = a.detalle || a.metodo;
+
+    const secPasos = document.getElementById('secPasos');
+    const ol = document.getElementById('modalPasos');
+    if (Array.isArray(a.pasos) && a.pasos.length > 0) {
+      secPasos.style.display = '';
+      ol.innerHTML = a.pasos.map(p => `<li>${p}</li>`).join('');
+    } else {
+      secPasos.style.display = 'none';
+      ol.innerHTML = '';
+    }
+
+    document.getElementById('modalMateriales').textContent = a.materiales;
+
+    backdrop.classList.add('open');
+    backdrop.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    backdrop.classList.remove('open');
+    backdrop.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    state.currentActivity = null;
+  }
+
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  function exportWord() {
+    const a = state.currentActivity;
+    if (!a) return;
+    const pasosHtml = (a.pasos || []).map(p => `<li>${p}</li>`).join('');
+    const objetivoHtml = a.objetivo ? `<h2>Objetivo</h2><p>${a.objetivo}</p>` : '';
+    const pasosSec = pasosHtml ? `<h2>Cómo desarrollarla paso a paso</h2><ol>${pasosHtml}</ol>` : '';
+
+    const html = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office"
+            xmlns:w="urn:schemas-microsoft-com:office:word"
+            xmlns="http://www.w3.org/TR/REC-html40">
+      <head>
+        <meta charset="utf-8">
+        <title>${a.titulo}</title>
+        <style>
+          @page { size: 21.59cm 33.02cm; margin: 2.5cm; }
+          body { font-family: 'Calibri', Arial, sans-serif; font-size: 12pt; color:#222; line-height:1.5; }
+          h1 { font-size: 20pt; color:#c85a17; margin-bottom: 4pt; }
+          .sub { font-size: 10pt; color:#666; margin-bottom: 6pt; }
+          h2 { font-size: 13pt; color:#a14410; margin-top: 18pt; margin-bottom: 6pt;
+               border-bottom: 1px solid #eadfcd; padding-bottom: 3pt; }
+          p { margin: 0 0 10pt; text-align: justify; }
+          ol { margin: 0 0 10pt 18pt; padding: 0; }
+          li { margin-bottom: 4pt; text-align: justify; }
+          .footer { margin-top: 30pt; font-size: 9pt; color:#888;
+                    border-top: 1px solid #ddd; padding-top: 8pt; }
+        </style>
+      </head>
+      <body>
+        <h1>${a.titulo}</h1>
+        <div class="sub">Club de Los Años Dorados · Conjunto Residencial Los Andes I</div>
+        <div class="sub"><b>Categoría:</b> ${CATEGORIAS[a.cat].nombre} &nbsp;·&nbsp; <b>Actividad N.º ${a.id}</b></div>
+        ${objetivoHtml}
+        <h2>Descripción general</h2>
+        <p>${a.detalle || a.metodo}</p>
+        ${pasosSec}
+        <h2>Materiales necesarios</h2>
+        <p>${a.materiales}</p>
+        <div class="footer">
+          Documento generado desde el catálogo digital del club · Tamaño Oficio (21.59 × 33.02 cm)
+        </div>
+      </body>
+      </html>
+    `;
+
+    const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Actividad_${a.id}_${slugify(a.titulo)}.doc`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  function exportPdf() {
+    const a = state.currentActivity;
+    if (!a) return;
+    const pasosHtml = (a.pasos || []).map(p => `<li>${p}</li>`).join('');
+    const objetivoHtml = a.objetivo ? `<h2>Objetivo</h2><p>${a.objetivo}</p>` : '';
+    const pasosSec = pasosHtml ? `<h2>Cómo desarrollarla paso a paso</h2><ol>${pasosHtml}</ol>` : '';
+
+    const win = window.open('', '_blank', 'width=900,height=700');
+    win.document.write(`
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${a.titulo}</title>
+        <style>
+          @page { size: 21.59cm 33.02cm; margin: 2.5cm; }
+          body { font-family: 'Georgia', 'Times New Roman', serif; font-size:12pt; color:#222; line-height:1.55; }
+          h1 { font-size: 20pt; color:#c85a17; margin:0 0 4pt; }
+          .sub { font-size: 10pt; color:#666; margin-bottom: 6pt; }
+          h2 { font-size: 13pt; color:#a14410; margin-top: 18pt;
+               border-bottom: 1px solid #eadfcd; padding-bottom: 3pt; }
+          p { margin: 0 0 10pt; text-align: justify; }
+          ol { margin: 0 0 10pt 18pt; padding: 0; }
+          li { margin-bottom: 4pt; text-align: justify; }
+          .footer { margin-top: 30pt; font-size: 9pt; color:#888;
+                    border-top: 1px solid #ddd; padding-top: 8pt; }
+          @media print { .no-print { display: none; } body { margin: 0; } }
+          .print-bar {
+            background: #c85a17; color:#fff; padding: 10px 16px;
+            font-family: sans-serif; font-size: 13px;
+            display: flex; justify-content: space-between; align-items: center;
+          }
+          .print-bar button {
+            background:#fff; color:#c85a17; border:none; padding:8px 16px;
+            border-radius: 6px; cursor:pointer; font-weight:600;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="print-bar no-print">
+          <span>Vista previa · Se abrirá el diálogo de impresión</span>
+          <button onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>
+        </div>
+        <br>
+        <h1>${a.titulo}</h1>
+        <div class="sub">Club de Los Años Dorados · Conjunto Residencial Los Andes I</div>
+        <div class="sub"><b>Categoría:</b> ${CATEGORIAS[a.cat].nombre} &nbsp;·&nbsp; <b>Actividad N.º ${a.id}</b></div>
+        ${objetivoHtml}
+        <h2>Descripción general</h2>
+        <p>${a.detalle || a.metodo}</p>
+        ${pasosSec}
+        <h2>Materiales necesarios</h2>
+        <p>${a.materiales}</p>
+        <div class="footer">
+          Documento generado desde el catálogo digital del club · Tamaño Oficio (21.59 × 33.02 cm)
+        </div>
+        <script>window.onload = () => { setTimeout(()=>window.print(), 300); };<\/script>
+      </body>
+      </html>
+    `);
+    win.document.close();
+  }
+
+  function slugify(texto) {
+    return texto.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '')
+      .substring(0, 40);
+  }
+
+  document.getElementById('btnWord').addEventListener('click', exportWord);
+  document.getElementById('btnPdf').addEventListener('click', exportPdf);
+
+  renderGrid();
+  </script>
+</body>
+</html>

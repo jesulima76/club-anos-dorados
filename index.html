@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club de Los Años Dorados | Conjunto Residencial Los Andes I</title>
+  <meta name="description" content="Programa de actividades recreativas, espirituales y de desarrollo personal para el Club de Los Años Dorados.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="landing">
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-icon">🌻</span>
+        <div>
+          <h1>Club de Los Años Dorados</h1>
+          <p>Conjunto Residencial Los Andes I</p>
+        </div>
+      </div>
+      <nav>
+        <a href="actividades.html" class="btn btn-outline">Ver Actividades</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-text">
+          <span class="tag">Bienvenidos</span>
+          <h2>Un espacio para compartir, aprender y disfrutar</h2>
+          <p>
+            Bienvenidos al <strong>Club de Los Años Dorados</strong>, un lugar donde la amistad,
+            la alegría y las ganas de vivir se renuevan cada día. Aquí encontrarás un catálogo
+            de actividades recreativas, espirituales y de desarrollo personal pensadas
+            especialmente para todos nuestros integrantes.
+          </p>
+          <div class="hero-actions">
+            <a href="actividades.html" class="btn btn-primary">Explorar Actividades</a>
+            <a href="#junta" class="btn btn-ghost">Conocer la Junta Directiva</a>
+          </div>
+          <ul class="hero-stats">
+            <li><strong>76</strong><span>Actividades</span></li>
+            <li><strong>6</strong><span>Categorías</span></li>
+            <li><strong>100%</strong><span>Comunidad</span></li>
+          </ul>
+        </div>
+        <div class="hero-image">
+          <img
+            src="img/hero.jpg"
+            alt="Adultos mayores disfrutando de actividades en el club"
+            onerror="this.src='https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=900&q=80'">
+        </div>
+      </div>
+    </section>
+
+    <section class="junta" id="junta">
+      <div class="container">
+        <h3 class="section-title">Junta Directiva</h3>
+        <p class="section-subtitle">Conoce a quienes hacen posible este club</p>
+        <div class="junta-grid">
+          <article class="card-miembro">
+            <div class="avatar">LL</div>
+            <h4>Leopoldo Lima</h4>
+            <p>Presidente</p>
+          </article>
+          <article class="card-miembro">
+            <div class="avatar">FM</div>
+            <h4>Franklin Márquez</h4>
+            <p>Vice-Presidente</p>
+          </article>
+          <article class="card-miembro">
+            <div class="avatar">GB</div>
+            <h4>Gladys Barco</h4>
+            <p>Secretaria</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container cta-inner">
+        <h3>¿Qué actividad haremos hoy?</h3>
+        <p>Explora el catálogo completo, filtra por categoría y prepárate para compartir un gran momento.</p>
+        <a href="actividades.html" class="btn btn-primary btn-lg">Ir al Catálogo de Actividades</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Club de Los Años Dorados · Conjunto Residencial Los Andes I</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
